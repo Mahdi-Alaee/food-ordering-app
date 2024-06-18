@@ -1,4 +1,8 @@
-import './app.css'
+import Header from "@/components/large/Header";
+import "./app.css";
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({ weight: ["500", "700"], subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -7,7 +11,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={roboto.className}>
+        {/* container */}
+        <div className="max-w-4xl mx-auto px-2 pt-5 text-grayColor">
+          <Header />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
