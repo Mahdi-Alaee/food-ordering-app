@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Right from "../icons/Right";
+import OvalButton from "../small/OvalButton";
 
 export default function Hero() {
   return (
@@ -20,14 +21,14 @@ export default function Hero() {
         </p>
         {/* buttons */}
         <div className="flex gap-x-6 items-center">
-          <Link
-            className="text-white bg-redColor px-6 py-2 rounded-full text-sm font-bold flex items-center gap-x-2"
-            href="/order"
-          >
+          <OvalButton href="/">
             ORDER NOW
             <Right />
-          </Link>
-          <Link className="px-6 text-sm flex items-center font-bold gap-x-2" href="/about">
+          </OvalButton>
+          <Link
+            className="px-6 text-sm flex items-center font-bold gap-x-2"
+            href="/about"
+          >
             Learn more
             <Right />
           </Link>

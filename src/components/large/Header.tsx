@@ -1,6 +1,7 @@
 import Link from "next/link";
 import NavBar from "../medium/NavBar";
 import { SlBasket } from "react-icons/sl";
+import OvalButton from "../small/OvalButton";
 
 export default function Header() {
   return (
@@ -20,12 +21,11 @@ export default function Header() {
         </Link>
 
         {/* register link */}
-        <Link
+        <OvalButton
           href="/login"
-          className="py-2 px-8 rounded-full bg-redColor font-bold text-white"
         >
           Register
-        </Link>
+        </OvalButton>
 
         {/* basket */}
         <Link href="/cart" className="text-2xl">
