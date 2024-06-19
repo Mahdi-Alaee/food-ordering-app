@@ -1,27 +1,46 @@
 import Image from "next/image";
 import Link from "next/link";
+import Right from "../icons/Right";
 
 export default function Hero() {
   return (
-    <section>
+    <section className="flex gap-x-24">
       {/* left */}
-      <div>
+      <div className="flex flex-col gap-y-6 justify-center w-5/12 pr-2">
         {/* title */}
-        <h1>Everything is better with a Pizza</h1>
+        <h1 className="text-4xl font-bold text-black">
+          Everything
+          <br /> is better
+          <br /> with a <span className="text-redColor">Pizza</span>
+        </h1>
         {/* description */}
-        <p>
+        <p className="text-sm">
           Pizza is the missing piece that makes every day complete, a simple yet
           delicious joy in life
         </p>
         {/* buttons */}
-        <div>
-          <Link href="/order">ORDER NOW</Link>
-          <Link href="/about">Learn more</Link>
+        <div className="flex gap-x-6 items-center">
+          <Link
+            className="text-white bg-redColor px-6 py-2 rounded-full text-sm font-bold flex items-center gap-x-2"
+            href="/order"
+          >
+            ORDER NOW
+            <Right />
+          </Link>
+          <Link className="px-6 text-sm flex items-center font-bold gap-x-2" href="/about">
+            Learn more
+            <Right />
+          </Link>
         </div>
       </div>
       {/* right */}
-      <div>
-        <Image src={'/images/pizza.png'} alt="pizza png" />
+      <div className="w-5/12">
+        <Image
+          src="/images/pizza.png"
+          alt="pizza png"
+          width="10000"
+          height="10000"
+        />
       </div>
     </section>
   );
