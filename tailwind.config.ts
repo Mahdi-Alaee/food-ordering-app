@@ -14,5 +14,12 @@ const config: Config = {
       }
     }
   },
+  screens: {
+    sm: "546px",
+    md: "708px",
+    lg: "922px",
+    xl: "1100px",
+    xxl: "1300px",
+  },
 };
 export default config;
