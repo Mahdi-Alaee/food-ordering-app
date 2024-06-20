@@ -8,7 +8,6 @@ export default function withSectionHeader(OriginalComponent: React.FunctionCompo
     return (
       <section>
         <SectionHeader {...props} />
-
         <OriginalComponent {...props} />
       </section>
     );
