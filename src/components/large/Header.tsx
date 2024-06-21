@@ -22,7 +22,7 @@ export default function Header() {
 
         {/* register link */}
         <OvalButton
-          href="/login"
+          href="/register"
         >
           Register
         </OvalButton>
