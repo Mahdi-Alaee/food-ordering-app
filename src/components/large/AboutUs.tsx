@@ -2,7 +2,7 @@ import withSectionHeader from "@/HOFs/withSectionHeader";
 
 function AboutUs() {
   return (
-    <div className="max-w-md text-center mx-auto">
+    <div className="max-w-md text-center mx-auto mb-16">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni minima
         odit recusandae. Illum ipsa non repudiandae? Eum ipsam iste quos
