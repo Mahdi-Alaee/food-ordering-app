@@ -1,9 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import NavBar from "../medium/NavBar";
 import { SlBasket } from "react-icons/sl";
 import OvalButton from "../small/OvalButton";
+import { useAppContext } from "@/Context/app";
+import { saveCookie } from "@/lib/auth";
 
 export default function Header() {
+  const { user, setUser } = useAppContext();
+
   return (
     <header className="flex justify-between">
       {/* left side */}
@@ -15,17 +21,26 @@ export default function Header() {
       </div>
       {/* right side */}
       <div className="flex items-center gap-x-4">
-        {/* login link */}
-        <Link href="/login" className="font-bold">
-          Login
-        </Link>
+        {user ? (
+          <div
+            onClick={() => {
+              saveCookie("session", "");
+              setUser(null);
+            }}
+          >
+            <OvalButton href="">Logout</OvalButton>
+          </div>
+        ) : (
+          <>
+            {/* login link */}
+            <Link href="/login" className="font-bold">
+              Login
+            </Link>
 
-        {/* register link */}
-        <OvalButton
-          href="/register"
-        >
-          Register
-        </OvalButton>
+            {/* register link */}
+            <OvalButton href="/register">Register</OvalButton>
+          </>
+        )}
 
         {/* basket */}
         <Link href="/cart" className="text-2xl">

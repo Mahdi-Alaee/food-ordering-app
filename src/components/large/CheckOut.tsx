@@ -9,17 +9,17 @@ function CheckOut() {
       <div className="absolute left-0 right-0 -mt-48 flex justify-between -z-10">
         <Image
           src="/images/sallad1.png"
-          alt="salad png"
-          width="110"
+          alt="sallad png"
+          width="10000"
           height="110"
-          className="h-56"
+          className="h-56 w-32"
         />
         <Image
           src="/images/sallad2.png"
-          alt="salad png"
-          width="110"
+          alt="sallad png"
+          width="10000"
           height="110"
-          className="-mt-28 h-56"
+          className="-mt-28 h-56 w-32"
         />
       </div>
       <FoodBox />

@@ -1,52 +1,40 @@
 "use client";
 
+import { useAppContext } from "@/Context/app";
+import { loginHandler } from "@/lib/auth";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export default function Register() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { setUser } = useAppContext();
 
-  const registerHandler = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsLoading(true);
     setError("");
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      console.log(res);
-      if (res.ok) {
-        const data = await res.json();
-        console.log(data);
-      } else {
-        setError(
-          "your entered data is not valid (password must be greater than 7 caracters and email must be unique)"
-        );
-      }
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      setError(
-        "your entered data is not valid (password must be greater than 7 caracters and email must be unique)"
-      );
-    }
+    const { user, message } = await loginHandler(email, password);
+    if (user) {
+      router.push("/");
+      setUser(user);
+    } else setError(message);
+    setIsLoading(false);
   };
 
   return (
     <main>
       {/* title */}
-      <h1 className="text-redColor text-4xl mt-8 text-center">Register</h1>
-      {/* register form */}
-      <form className="max-w-80 mx-auto mt-4 mb-16" onSubmit={registerHandler}>
-        {/* Register container */}
+      <h1 className="text-redColor text-4xl mt-8 text-center">Login</h1>
+      {/* Login form */}
+      <form className="max-w-80 mx-auto mt-4 mb-16" onSubmit={onLogin}>
+        {/* Login container */}
         <div className="flex flex-col gap-y-2">
           {/* email */}
           <input
@@ -70,7 +58,7 @@ export default function Register() {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? "Loading ..." : "Register"}
+            {isLoading ? "Loading ..." : "Login"}
           </button>
           {/* error */}
           <p className="text-center text-red-400">{error}</p>
@@ -95,10 +83,10 @@ export default function Register() {
         {/* existing account */}
         <div className="text-center">
           {/* question */}
-          <span>Existing account? </span>
-          {/* login */}
-          <Link className="underline" href="/login">
-            Login here »
+          <span>{"haven't any account?"} </span>
+          {/* register */}
+          <Link className="underline" href="/register">
+            Register here »
           </Link>
         </div>
       </form>

@@ -41,6 +41,7 @@ export default function Hero() {
           alt="pizza png"
           width="10000"
           height="10000"
+          priority={true}
         />
       </div>
     </section>
