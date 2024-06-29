@@ -2,7 +2,7 @@ import Header from "@/components/large/Header";
 import "./app.css";
 import { Roboto } from "next/font/google";
 import Footer from "@/components/large/Footer";
-import { AppContextProvider } from "@/Context/app";
+import Providers from "@/components/medium/Providers";
 
 const roboto = Roboto({ weight: ["400", "500", "700"], subsets: ["latin"] });
 
@@ -16,11 +16,11 @@ export default function RootLayout({
       <body className={roboto.className}>
         {/* container */}
         <div className="max-w-4xl mx-auto px-2 pt-5 text-grayColor">
-          <AppContextProvider>
+          <Providers>
             <Header />
             {children}
             <Footer />
-          </AppContextProvider>
+          </Providers>
         </div>
       </body>
     </html>

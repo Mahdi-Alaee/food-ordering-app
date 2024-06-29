@@ -4,11 +4,10 @@ import Link from "next/link";
 import NavBar from "../medium/NavBar";
 import { SlBasket } from "react-icons/sl";
 import OvalButton from "../small/OvalButton";
-import { useAppContext } from "@/Context/app";
-import { saveCookie } from "@/lib/auth";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
-  const { user, setUser } = useAppContext();
+  const { data: session } = useSession();
 
   return (
     <header className="flex justify-between">
@@ -21,11 +20,13 @@ export default function Header() {
       </div>
       {/* right side */}
       <div className="flex items-center gap-x-4">
-        {user ? (
+        {session ? (
           <div
             onClick={() => {
-              saveCookie("session", "");
-              setUser(null);
+              signOut({
+                callbackUrl: "/",
+                redirect: true,
+              });
             }}
           >
             <OvalButton href="">Logout</OvalButton>

@@ -1,11 +1,9 @@
 "use client";
 
-import { useAppContext } from "@/Context/app";
-import { loginHandler } from "@/lib/auth";
-import { cookies } from "next/headers";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function Login() {
@@ -14,17 +12,29 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setUser } = useAppContext();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  const onLogin = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsLoading(true);
     setError("");
-    const { user, message } = await loginHandler(email, password);
-    if (user) {
-      router.push("/");
-      setUser(user);
-    } else setError(message);
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl,
+      });
+      if (res?.ok) {
+        router.push(callbackUrl);
+      } else {
+        setError("The credentials is not valid!");
+      }
+    } catch (err) {
+      console.log("catch", err);
+      setError("an error is occured!");
+    }
     setIsLoading(false);
   };
 
