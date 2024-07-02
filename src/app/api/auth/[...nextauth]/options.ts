@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import GoogleProvider from "next-auth/providers/google";
 
 export const options: AuthOptions = {
   providers: [
@@ -12,7 +13,7 @@ export const options: AuthOptions = {
         password: {
           label: "Password",
           type: "password",
-          placeholder: "password"
+          placeholder: "password",
         },
       },
       authorize: async (credentials) => {
@@ -30,5 +31,17 @@ export const options: AuthOptions = {
         }
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+    }),
   ],
+  debug: true
 };

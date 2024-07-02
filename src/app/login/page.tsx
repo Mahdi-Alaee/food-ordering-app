@@ -78,7 +78,11 @@ export default function Login() {
         {/* buttons container */}
         <div className="w-full flex flex-col gap-y-2">
           {/* google button */}
-          <button className="border py-2 text-black font-bold rounded-xl flex items-center justify-center gap-x-4">
+          <button
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            type="button"
+            className="border py-2 text-black font-bold rounded-xl flex items-center justify-center gap-x-4"
+          >
             <Image
               src="/images/google.png"
               alt="google png"
