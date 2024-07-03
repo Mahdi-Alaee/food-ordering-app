@@ -8,7 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const { data: session } = useSession();
-
+  
   return (
     <header className="flex justify-between">
       {/* left side */}
@@ -21,6 +21,10 @@ export default function Header() {
       {/* right side */}
       <div className="flex items-center gap-x-4">
         {session ? (
+          <>
+          <Link href='/profile'>
+            Hello, <span className="text-redColor">{session.user?.email?.split('@')[0]}</span>
+          </Link>
           <div
             onClick={() => {
               signOut({
@@ -31,6 +35,7 @@ export default function Header() {
           >
             <OvalButton href="">Logout</OvalButton>
           </div>
+          </>
         ) : (
           <>
             {/* login link */}
