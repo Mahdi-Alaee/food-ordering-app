@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 export default function Profile() {
   const { status, data } = useSession();
 
-  console.log(data?.user);
 
   if (status === "loading") {
     return "Loading ...";
@@ -24,14 +23,24 @@ export default function Profile() {
       <div className="max-w-md mx-auto flex gap-x-6">
         {/* left */}
         <div className="max-w-2/6">
-          {/* profile photo */}
-          <Image
-            src="/images/person.png"
-            alt="person profile image"
-            width="10000"
-            height="10000"
-            className="w-32 object-contain rounded-xl"
-          />
+          {data.user?.image ? (
+            //   {/* profile photo */}
+            <Image
+              src={data.user?.image}
+              alt="person profile image"
+              width="10000"
+              height="10000"
+              className="w-32 object-contain rounded-xl"
+            />
+          ) : (
+            <Image
+              src="/images/person.png"
+              alt="person profile image"
+              width="10000"
+              height="10000"
+              className="w-32 object-contain rounded-xl"
+            />
+          )}
           {/* edit button */}
           <button
             className="flex justify-center items-center border w-full py-2 rounded-xl mt-1 font-bold duration-150 hover:border-grayColor hover:bg-grayColor hover:text-white"
@@ -53,7 +62,7 @@ export default function Profile() {
             className="border p-2 rounded-xl bg-gray-300/70"
             type="text"
             disabled
-            value="mahdi@gmail.com"
+            value={data.user?.email!}
           />
           {/* submit */}
           <button

@@ -4,6 +4,7 @@ import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
+import Github from "next-auth/providers/github";
 
 export const options: AuthOptions = {
   providers: [
@@ -42,6 +43,10 @@ export const options: AuthOptions = {
         }
       }
     }),
+    Github({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret:process.env.GITHUB_SECRET!
+    })
   ],
   debug: true
 };

@@ -98,6 +98,24 @@ export default function Register() {
             />
             Login with google
           </button>
+          {/* github button */}
+          <button
+            className="border py-2 text-black font-bold rounded-xl flex items-center justify-center gap-x-4"
+            onClick={() => {
+              signIn("github", {
+                callbackUrl: "/",
+              });
+            }}
+            type="button"
+          >
+            <Image
+              src="/images/github.png"
+              alt="github png"
+              width="24"
+              height="24"
+            />
+            Login with github
+          </button>
         </div>
         {/* spliter border */}
         <div className="border-t my-4"></div>
