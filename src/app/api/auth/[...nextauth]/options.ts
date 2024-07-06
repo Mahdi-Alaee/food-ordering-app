@@ -5,8 +5,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "@/lib/db";
+import { Adapter } from "next-auth/adapters";
 
 export const options: AuthOptions = {
+  adapter: MongoDBAdapter(clientPromise) as Adapter,
   providers: [
     CredentialsProvider({
       credentials: {
@@ -39,14 +43,14 @@ export const options: AuthOptions = {
         params: {
           prompt: "consent",
           access_type: "offline",
-          response_type: "code"
-        }
-      }
+          response_type: "code",
+        },
+      },
     }),
     Github({
       clientId: process.env.GITHUB_ID!,
-      clientSecret:process.env.GITHUB_SECRET!
-    })
+      clientSecret: process.env.GITHUB_SECRET!,
+    }),
   ],
-  debug: true
+  debug: true,
 };
