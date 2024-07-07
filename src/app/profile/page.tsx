@@ -3,16 +3,55 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function Profile() {
   const { status, data } = useSession();
+  const [newName, setNewName] = useState("");
+  const [state, setState] = useState<"ok" | "error" | "">("");
 
+  useEffect(() => {
+    setNewName(data?.user?.name || "");
+  }, [data]);
 
-  if (status === "loading") {
+  useEffect(() => {
+    setTimeout(() => {
+      setState("");
+    }, 2000);
+  }, [state]);
+
+  if (status === "loading") { 
     return "Loading ...";
   } else if (status !== "authenticated") {
     redirect("/login");
   }
+
+  const onEditUserName = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log({ newName });
+
+    const res = (await fetch("/api/auth/name", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.user?.email,
+        newName,
+      }),
+    })) as Response;
+
+    console.log({ res });
+    if (res.ok) {
+      const resData = await res.json();
+      if (resData.acknowledged) {
+        setState("ok");
+        return false;
+      }
+    }
+    setState("error");
+  };
 
   return (
     <main className="mb-16">
@@ -50,12 +89,24 @@ export default function Profile() {
           </button>
         </div>
         {/* right */}
-        <form className="flex flex-col w-full gap-y-2">
+        <form
+          className="flex flex-col w-full gap-y-2"
+          onSubmit={onEditUserName}
+        >
+          {/* state */}
+          {state === "error" && (
+            <h2 className="text-red-500">an error is occured!</h2>
+          )}
+          {state === "ok" && (
+            <h2 className="text-green-500">your name updated successfully!</h2>
+          )}
           {/* first and last name */}
           <input
             className="border p-2 rounded-xl bg-gray-50 outline-blue-300"
             type="text"
-            placeholder="First and last name"
+            placeholder="Enter your First and last name ..."
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
           />
           {/* email */}
           <input

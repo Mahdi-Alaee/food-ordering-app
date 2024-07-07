@@ -13,6 +13,7 @@ const userSchema = new Schema(
         message: "password must be greater than 7 caracters",
       },
     },
+    name: String,
   },
   { timestamps: true }
 );
