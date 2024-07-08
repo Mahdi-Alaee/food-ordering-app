@@ -3,24 +3,25 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function Profile() {
   const { status, data } = useSession();
   const [newName, setNewName] = useState("");
-  const [state, setState] = useState<"ok" | "error" | "">("");
+  const [state, setState] = useState<"ok" | "error" | "loading" | "">("");
 
   useEffect(() => {
     setNewName(data?.user?.name || "");
   }, [data]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setState("");
-    }, 2000);
+    if (state !== "" && state !== "loading")
+      setTimeout(() => {
+        setState("");
+      }, 2000);
   }, [state]);
 
-  if (status === "loading") { 
+  if (status === "loading") {
     return "Loading ...";
   } else if (status !== "authenticated") {
     redirect("/login");
@@ -29,7 +30,7 @@ export default function Profile() {
   const onEditUserName = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log({ newName });
+    setState("loading");
 
     const res = (await fetch("/api/auth/name", {
       method: "PUT",
@@ -51,6 +52,21 @@ export default function Profile() {
       }
     }
     setState("error");
+  };
+
+  const onChangeProfilePhoto = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length! < 1) {
+      setState("error");
+      return false;
+    }
+
+    const formData = new FormData();
+    formData.set("file", e.target.files?.item(0)!);
+
+    fetch("/api/auth/profile", {
+      method: "PUT",
+      body: formData,
+    });
   };
 
   return (
@@ -80,13 +96,21 @@ export default function Profile() {
               className="w-32 object-contain rounded-xl"
             />
           )}
-          {/* edit button */}
-          <button
-            className="flex justify-center items-center border w-full py-2 rounded-xl mt-1 font-bold duration-150 hover:border-grayColor hover:bg-grayColor hover:text-white"
-            type="button"
-          >
-            Edit
-          </button>
+          {/* edit profile photo */}
+          <label>
+            <span
+              className="flex justify-center items-center border w-full py-2 rounded-xl mt-1 font-bold duration-150 cursor-pointer 
+              hover:border-grayColor hover:bg-grayColor hover:text-white"
+            >
+              Edit
+            </span>
+            <input
+              className="hidden disabled:opacity-70"
+              type="file"
+              onChange={onChangeProfilePhoto}
+              disabled={state !== ""}
+            />
+          </label>
         </div>
         {/* right */}
         <form
@@ -99,6 +123,9 @@ export default function Profile() {
           )}
           {state === "ok" && (
             <h2 className="text-green-500">your name updated successfully!</h2>
+          )}
+          {state === "loading" && (
+            <h2 className="text-blue-500">saving ...</h2>
           )}
           {/* first and last name */}
           <input
@@ -117,8 +144,9 @@ export default function Profile() {
           />
           {/* submit */}
           <button
-            className="p-2 rounded-xl bg-redColor text-white"
+            className="p-2 rounded-xl bg-redColor text-white disabled:opacity-70"
             type="submit"
+            disabled={state !== ""}
           >
             Save
           </button>
