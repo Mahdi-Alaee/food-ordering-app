@@ -1,20 +1,30 @@
 "use client";
 
+import ImageUploader from "@/components/small/ImageUploader";
 import { useSession } from "next-auth/react";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
-import { redirect } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function Profile() {
   const { status, data } = useSession();
   const [newName, setNewName] = useState("");
-  const [state, setState] = useState<"ok" | "error" | "loading" | "">("");
+  const [state, setState] = useState<
+    "ok" | "error" | "loading" | "image uploaded" | "image upload failed" | ""
+  >("");
+  const router = useRouter();
+  const [userImage, setUserImage] = useState("");
 
   useEffect(() => {
     setNewName(data?.user?.name || "");
+    setUserImage(data?.user?.image || "");
   }, [data]);
 
   useEffect(() => {
+    if (state === "image uploaded") {
+    }
+
     if (state !== "" && state !== "loading")
       setTimeout(() => {
         setState("");
@@ -32,7 +42,7 @@ export default function Profile() {
 
     setState("loading");
 
-    const res = (await fetch("/api/auth/name", {
+    const res = (await fetch("/api/profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -40,6 +50,7 @@ export default function Profile() {
       body: JSON.stringify({
         email: data.user?.email,
         newName,
+        image: data.user?.image || "",
       }),
     })) as Response;
 
@@ -54,21 +65,6 @@ export default function Profile() {
     setState("error");
   };
 
-  const onChangeProfilePhoto = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length! < 1) {
-      setState("error");
-      return false;
-    }
-
-    const formData = new FormData();
-    formData.set("file", e.target.files?.item(0)!);
-
-    fetch("/api/auth/profile", {
-      method: "PUT",
-      body: formData,
-    });
-  };
-
   return (
     <main className="mb-16">
       {/* title */}
@@ -78,39 +74,40 @@ export default function Profile() {
       <div className="max-w-md mx-auto flex gap-x-6">
         {/* left */}
         <div className="max-w-2/6">
-          {data.user?.image ? (
+          {state === "image upload failed" && (
+            <h2 className="text-red-500 text-center">an error is occured!</h2>
+          )}
+          {state === "image uploaded" && (
+            <h2 className="text-green-500 text-center">
+              the profile image changed successfully
+            </h2>
+          )}
+          {userImage ? (
             //   {/* profile photo */}
             <Image
-              src={data.user?.image}
+              src={userImage}
               alt="person profile image"
               width="10000"
               height="10000"
-              className="w-32 object-contain rounded-xl"
-            />
-          ) : (
-            <Image
+              className="w-32 object-contain rounded-xl mb-2"
+              priority={true}
+              />
+            ) : (
+              <Image
               src="/images/person.png"
               alt="person profile image"
               width="10000"
               height="10000"
-              className="w-32 object-contain rounded-xl"
+              className="w-32 object-contain rounded-xl mb-2"
+              priority={true}
             />
           )}
           {/* edit profile photo */}
-          <label>
-            <span
-              className="flex justify-center items-center border w-full py-2 rounded-xl mt-1 font-bold duration-150 cursor-pointer 
-              hover:border-grayColor hover:bg-grayColor hover:text-white"
-            >
-              Edit
-            </span>
-            <input
-              className="hidden disabled:opacity-70"
-              type="file"
-              onChange={onChangeProfilePhoto}
-              disabled={state !== ""}
-            />
-          </label>
+          <ImageUploader
+            setState={setState}
+            email={data.user?.email!}
+            setImage={setUserImage}
+          />
         </div>
         {/* right */}
         <form
@@ -124,9 +121,7 @@ export default function Profile() {
           {state === "ok" && (
             <h2 className="text-green-500">your name updated successfully!</h2>
           )}
-          {state === "loading" && (
-            <h2 className="text-blue-500">saving ...</h2>
-          )}
+          {state === "loading" && <h2 className="text-blue-500">saving ...</h2>}
           {/* first and last name */}
           <input
             className="border p-2 rounded-xl bg-gray-50 outline-blue-300"
