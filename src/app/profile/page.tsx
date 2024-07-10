@@ -1,6 +1,8 @@
 "use client";
 
 import ImageUploader from "@/components/small/ImageUploader";
+import TextBox from "@/components/small/TextBox";
+import { SessionData } from "@/types/session";
 import { useSession } from "next-auth/react";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
@@ -13,18 +15,27 @@ export default function Profile() {
   const [state, setState] = useState<
     "ok" | "error" | "loading" | "image uploaded" | "image upload failed" | ""
   >("");
-  const router = useRouter();
   const [userImage, setUserImage] = useState("");
+  const [phone, setPhone] = useState("");
+  const [street, setStreet] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+
+  const userData = data as SessionData;
+  const user = userData?.user;
 
   useEffect(() => {
-    setNewName(data?.user?.name || "");
-    setUserImage(data?.user?.image || "");
+    setNewName(user?.name || "");
+    setUserImage(user?.image || "");
+    setPhone(user?.phone || "");
+    setStreet(user?.street || "");
+    setPostalCode(user?.postalCode || "");
+    setCity(user?.city || "");
+    setCountry(user?.country || "");
   }, [data]);
 
   useEffect(() => {
-    if (state === "image uploaded") {
-    }
-
     if (state !== "" && state !== "loading")
       setTimeout(() => {
         setState("");
@@ -48,9 +59,9 @@ export default function Profile() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: data.user?.email,
+        email: user?.email,
         newName,
-        image: data.user?.image || "",
+        image: user?.image || "",
       }),
     })) as Response;
 
@@ -91,9 +102,9 @@ export default function Profile() {
               height="10000"
               className="w-32 object-contain rounded-xl mb-2"
               priority={true}
-              />
-            ) : (
-              <Image
+            />
+          ) : (
+            <Image
               src="/images/person.png"
               alt="person profile image"
               width="10000"
@@ -105,7 +116,7 @@ export default function Profile() {
           {/* edit profile photo */}
           <ImageUploader
             setState={setState}
-            email={data.user?.email!}
+            email={user?.email!}
             setImage={setUserImage}
           />
         </div>
@@ -123,19 +134,57 @@ export default function Profile() {
           )}
           {state === "loading" && <h2 className="text-blue-500">saving ...</h2>}
           {/* first and last name */}
-          <input
-            className="border p-2 rounded-xl bg-gray-50 outline-blue-300"
-            type="text"
+          <TextBox
+            label="first name and last name:"
             placeholder="Enter your First and last name ..."
-            value={newName}
             onChange={(e) => setNewName(e.target.value)}
+            value={newName}
           />
           {/* email */}
-          <input
-            className="border p-2 rounded-xl bg-gray-300/70"
-            type="text"
+          <TextBox
+            label="Email:"
+            placeholder="Enter your email ..."
+            onChange={(e) => setNewName(e.target.value)}
+            value={user?.email!}
             disabled
-            value={data.user?.email!}
+          />
+          {/* phone */}
+          <TextBox
+            label="Phone:"
+            placeholder="Enter your phone number ..."
+            onChange={(e) => setPhone(e.target.value)}
+            value={phone}
+          />
+          {/* street */}
+          <TextBox
+            label="Street address:"
+            onChange={(e) => setStreet(e.target.value)}
+            placeholder="Enter your street address ..."
+            value={street}
+          />
+          <div className="grid grid-cols-2 gap-x-4">
+            {/* postal code */}
+            <TextBox
+              label="Postal code:"
+              onChange={(e) => setPostalCode(e.target.value)}
+              placeholder="Enter postal code ..."
+              value={postalCode}
+            />
+
+            {/* city */}
+            <TextBox
+              label="City:"
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Enter your city ..."
+              value={city}
+            />
+          </div>
+          {/* country */}
+          <TextBox
+            label="Country:"
+            onChange={(e) => setCountry(e.target.value)}
+            placeholder="Enter your country..."
+            value={country}
           />
           {/* submit */}
           <button

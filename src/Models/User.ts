@@ -14,7 +14,12 @@ const userSchema = new Schema(
       },
     },
     name: String,
-    image: String
+    image: String,
+    phone: String,
+    street: String,
+    postalCode: String,
+    city: String,
+    country: String,
   },
   { timestamps: true }
 );
