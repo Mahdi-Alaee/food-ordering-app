@@ -50,6 +50,19 @@ export const options: AuthOptions = {
     Github({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
+      profile(profile, tokens) {
+        return {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          image: profile.image,
+          phone: profile.phone,
+          street: profile.street,
+          postalCode: profile.postalCode,
+          city: profile.city,
+          country: profile.country,
+        }
+      },
     }),
   ],
   debug: true,

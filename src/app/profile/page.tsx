@@ -2,11 +2,10 @@
 
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
-import { SessionData } from "@/types/session";
+import { UserData } from "@/types/session";
 import { useSession } from "next-auth/react";
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 export default function Profile() {
@@ -22,8 +21,7 @@ export default function Profile() {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
 
-  const userData = data as SessionData;
-  const user = userData?.user;
+  const [user, setUser] = useState<UserData | null>();
 
   useEffect(() => {
     setNewName(user?.name || "");
@@ -33,7 +31,19 @@ export default function Profile() {
     setPostalCode(user?.postalCode || "");
     setCity(user?.city || "");
     setCountry(user?.country || "");
-  }, [data]);
+  }, [user]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      (async () => {
+        const res = await fetch("/api/profile");
+        if (res.ok) {
+          const userData = (await res.json()) as UserData;          
+          setUser(userData);
+        }
+      })();
+    }
+  }, [status]);
 
   useEffect(() => {
     if (state !== "" && state !== "loading")
@@ -42,7 +52,7 @@ export default function Profile() {
       }, 2000);
   }, [state]);
 
-  if (status === "loading") {
+  if (status === "loading" || !user) {
     return "Loading ...";
   } else if (status !== "authenticated") {
     redirect("/login");
@@ -61,7 +71,11 @@ export default function Profile() {
       body: JSON.stringify({
         email: user?.email,
         newName,
-        image: user?.image || "",
+        phone,
+        street,
+        postalCode,
+        city,
+        country,
       }),
     })) as Response;
 
