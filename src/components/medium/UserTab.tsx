@@ -9,7 +9,6 @@ interface UserTabProps {
 
 export default function UserTab({ href, children }: UserTabProps) {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <Link

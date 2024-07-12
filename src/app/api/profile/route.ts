@@ -29,9 +29,13 @@ export async function PUT(req: Request) {
 export async function GET() {
   mongoose.connect(process.env.MONGO_URL!);
   const session = await getServerSession(options);
+  console.log({ session });
 
   if (!session?.user) {
     throw new Error("please signin first!");
   }
-  return Response.json(await UserModel.findOne({ email: session.user.email }));
+  const user = await UserModel.findOne({ email: session.user.email });
+  console.log({ user });
+
+  return Response.json(user);
 }

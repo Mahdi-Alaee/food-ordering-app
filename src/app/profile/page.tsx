@@ -24,7 +24,6 @@ export default function Profile() {
   const [country, setCountry] = useState("");
 
   const [user, setUser] = useState<UserData | null>();
-  console.log(user);
 
   useEffect(() => {
     setNewName(user?.name || "");
