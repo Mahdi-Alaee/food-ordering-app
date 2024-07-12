@@ -3,15 +3,12 @@
 import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
-import { UserData } from "@/types/session";
-import { useSession } from "next-auth/react";
+import useProfile from "@/hooks/useProfile";
 import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
 export default function Profile() {
-  const { status, data } = useSession();
   const [newName, setNewName] = useState("");
   const [state, setState] = useState<
     "ok" | "error" | "loading" | "image uploaded" | "image upload failed" | ""
@@ -23,7 +20,7 @@ export default function Profile() {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
 
-  const [user, setUser] = useState<UserData | null>();
+  const { isLoading, user } = useProfile();
 
   useEffect(() => {
     setNewName(user?.name || "");
@@ -36,27 +33,15 @@ export default function Profile() {
   }, [user]);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      (async () => {
-        const res = await fetch("/api/profile");
-        if (res.ok) {
-          const userData = (await res.json()) as UserData;
-          setUser(userData);
-        }
-      })();
-    }
-  }, [status]);
-
-  useEffect(() => {
     if (state !== "" && state !== "loading")
       setTimeout(() => {
         setState("");
       }, 2000);
   }, [state]);
 
-  if (status === "loading" || !user) {
+  if (isLoading) {
     return "Loading ...";
-  } else if (status !== "authenticated") {
+  } else if (user === null) {
     redirect("/login");
   }
 
@@ -95,7 +80,7 @@ export default function Profile() {
   return (
     <main className="mb-16">
       {/* user tabs */}
-      <UserTabs isAdmin={user.isAdmin!} />
+      <UserTabs isAdmin={user?.isAdmin!} />
       {/* content */}
       <div className="max-w-md mx-auto flex gap-x-6">
         {/* left */}
