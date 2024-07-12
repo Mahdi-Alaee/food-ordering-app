@@ -1,10 +1,12 @@
 "use client";
 
+import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import { UserData } from "@/types/session";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 
@@ -22,6 +24,7 @@ export default function Profile() {
   const [country, setCountry] = useState("");
 
   const [user, setUser] = useState<UserData | null>();
+  console.log(user);
 
   useEffect(() => {
     setNewName(user?.name || "");
@@ -38,7 +41,7 @@ export default function Profile() {
       (async () => {
         const res = await fetch("/api/profile");
         if (res.ok) {
-          const userData = (await res.json()) as UserData;          
+          const userData = (await res.json()) as UserData;
           setUser(userData);
         }
       })();
@@ -92,9 +95,8 @@ export default function Profile() {
 
   return (
     <main className="mb-16">
-      {/* title */}
-      <h1 className="text-redColor text-4xl mt-8 text-center mb-10">Profile</h1>
-
+      {/* user tabs */}
+      <UserTabs isAdmin={user.isAdmin!} />
       {/* content */}
       <div className="max-w-md mx-auto flex gap-x-6">
         {/* left */}
