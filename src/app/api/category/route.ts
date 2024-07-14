@@ -2,6 +2,8 @@ import { CategoryModel } from "@/Models/Category";
 import mongoose from "mongoose";
 
 export async function POST(req: Request) {
+  console.log('runned');
+  
   const body = await req.json();
   mongoose.connect(process.env.MONGO_URL!);
   const res = await CategoryModel.create(body);

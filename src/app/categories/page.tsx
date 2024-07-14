@@ -6,6 +6,7 @@ import useProfile from "@/hooks/useProfile";
 import { Category } from "@/types/small-types";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Categories() {
   const { isLoading, user } = useProfile();
@@ -15,7 +16,8 @@ export default function Categories() {
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if ("name" in selectedCategory) {
+    const EditCategoryPromise = new Promise(async (resolve, reject) => {
+      if (!("_id" in selectedCategory)) return false;
       const res = await fetch("/api/category", {
         method: "PUT",
         headers: {
@@ -31,8 +33,13 @@ export default function Categories() {
         getCategories();
         setName("");
         setSelectedCategory({});
+        resolve(res);
+      } else reject();
+    });
+    const CreateCategoryPromise = new Promise(async (resolve, reject) => {
+      if ("name" in selectedCategory) {
+        return false;
       }
-    } else {
       const res = await fetch("/api/category", {
         method: "POST",
         headers: {
@@ -40,9 +47,30 @@ export default function Categories() {
         },
         body: JSON.stringify({ name }),
       });
+
       if (res.ok) {
         setName("");
-      }
+        getCategories()
+        resolve(res);
+      } else reject();
+    });
+    console.log(selectedCategory);
+
+    if ("name" in selectedCategory) {
+      console.log(1);
+
+      toast.promise(EditCategoryPromise, {
+        pending: "Loading ...",
+        success: "The category edited successfully",
+        error: "An error is occured",
+      });
+    } else {
+      console.log(2);
+      toast.promise(CreateCategoryPromise, {
+        pending: "Loading ...",
+        success: "The category edited successfully",
+        error: "An error is occured",
+      });
     }
   };
 
@@ -101,21 +129,28 @@ export default function Categories() {
         {/* categories */}
         <div>
           {/* title */}
-          <span className="text-sm">Edit category:</span>
-          {/* items */}
-          <ul className="flex flex-col gap-y-1">
-            {categories.map((cat) => (
-              <li
-                key={cat._id}
-                className="bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
-                onClick={() => setSelectedCategory(cat)}
-              >
-                {cat.name}
-              </li>
-            ))}
-          </ul>
+          {categories.length < 1 ? (
+            <span className="text-red-500">No items are avalible!</span>
+          ) : (
+            <>
+              <span className="text-sm">Edit category:</span>
+              {/* items */}
+              <ul className="flex flex-col gap-y-1">
+                {categories.map((cat) => (
+                  <li
+                    key={cat._id}
+                    className="bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
+                    onClick={() => setSelectedCategory(cat)}
+                  >
+                    {cat.name}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       </div>
+      <ToastContainer />
     </main>
   );
 }
