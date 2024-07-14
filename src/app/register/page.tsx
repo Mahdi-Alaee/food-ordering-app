@@ -23,10 +23,10 @@ export default function Register() {
         },
         body: JSON.stringify({ email, password }),
       });
-      console.log(res);
       if (res.ok) {
-        const data = await res.json();
-        console.log(data);
+        const user = await res.json();
+        console.log({user});
+        
       } else {
         setError(
           "your entered data is not valid (password must be greater than 7 caracters and email must be unique)"

@@ -10,7 +10,7 @@ export default function TextBox({
   disabled = false,
   label,
   placeholder,
-  onChange
+  onChange,
 }: TextBoxProps) {
   return (
     <div className="flex flex-col">
@@ -18,7 +18,7 @@ export default function TextBox({
       <span className="text-sm">{label}</span>
       {/* email */}
       <input
-        className="border p-2 rounded-xl bg-gray-200 disabled:bg-gray-300"
+        className={`border p-2 rounded-xl bg-gray-200 disabled:bg-gray-300`}
         type={type}
         disabled={disabled}
         value={value}

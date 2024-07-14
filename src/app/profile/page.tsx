@@ -66,7 +66,6 @@ export default function Profile() {
       }),
     })) as Response;
 
-    console.log({ res });
     if (res.ok) {
       const resData = await res.json();
       if (resData.acknowledged) {

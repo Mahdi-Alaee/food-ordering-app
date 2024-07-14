@@ -29,7 +29,6 @@ export async function PUT(req: Request) {
 export async function GET() {
   mongoose.connect(process.env.MONGO_URL!);
   const session = await getServerSession(options);
-  console.log({ session });
 
   if (!session?.user) {
     throw new Error("please signin first!");
