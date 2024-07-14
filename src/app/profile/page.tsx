@@ -7,11 +7,12 @@ import useProfile from "@/hooks/useProfile";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Profile() {
   const [newName, setNewName] = useState("");
   const [state, setState] = useState<
-    "ok" | "error" | "loading" | "image uploaded" | "image upload failed" | ""
+    "image uploaded" | "image upload failed" | "image loading" | ""
   >("");
   const [userImage, setUserImage] = useState("");
   const [phone, setPhone] = useState("");
@@ -33,10 +34,16 @@ export default function Profile() {
   }, [user]);
 
   useEffect(() => {
-    if (state !== "" && state !== "loading")
+    if (state !== "") {
+      state === "image loading"
+        ? toast.info("Loading ...")
+        : state === "image uploaded"
+        ? toast.success("Your profile photo changed successfully")
+        : toast.error("an error is occured!");
       setTimeout(() => {
         setState("");
       }, 2000);
+    }
   }, [state]);
 
   if (isLoading) {
@@ -45,37 +52,32 @@ export default function Profile() {
     redirect("/login");
   }
 
-  const onEditUserName = async (e: FormEvent<HTMLFormElement>) => {
+  const onEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setState("loading");
-
-    const res = (await fetch("/api/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: user?.email,
-        newName,
-        phone,
-        street,
-        postalCode,
-        city,
-        country,
+    toast.promise(
+      fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: user?.email,
+          newName,
+          phone,
+          street,
+          postalCode,
+          city,
+          country,
+        }),
       }),
-    })) as Response;
-
-    if (res.ok) {
-      const resData = await res.json();
-      if (resData.acknowledged) {
-        setState("ok");
-        return false;
-      }
-    }
-    setState("error");
+      {
+        pending: "Loading...",
+        success: "your profile updated successfully",
+        error: "Error!",
+      },
+      { position: "top-center" }
+    );
   };
-
   return (
     <main className="mb-16">
       {/* user tabs */}
@@ -84,14 +86,6 @@ export default function Profile() {
       <div className="max-w-md mx-auto flex gap-x-6">
         {/* left */}
         <div className="max-w-2/6">
-          {state === "image upload failed" && (
-            <h2 className="text-red-500 text-center">an error is occured!</h2>
-          )}
-          {state === "image uploaded" && (
-            <h2 className="text-green-500 text-center">
-              the profile image changed successfully
-            </h2>
-          )}
           {userImage ? (
             //   {/* profile photo */}
             <Image
@@ -114,24 +108,14 @@ export default function Profile() {
           )}
           {/* edit profile photo */}
           <ImageUploader
+          state={state}
             setState={setState}
             email={user?.email!}
             setImage={setUserImage}
           />
         </div>
         {/* right */}
-        <form
-          className="flex flex-col w-full gap-y-2"
-          onSubmit={onEditUserName}
-        >
-          {/* state */}
-          {state === "error" && (
-            <h2 className="text-red-500">an error is occured!</h2>
-          )}
-          {state === "ok" && (
-            <h2 className="text-green-500">your name updated successfully!</h2>
-          )}
-          {state === "loading" && <h2 className="text-blue-500">saving ...</h2>}
+        <form className="flex flex-col w-full gap-y-2" onSubmit={onEditProfile}>
           {/* first and last name */}
           <TextBox
             label="first name and last name:"
@@ -195,6 +179,7 @@ export default function Profile() {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </main>
   );
 }

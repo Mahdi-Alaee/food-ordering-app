@@ -4,6 +4,7 @@ import { Roboto } from "next/font/google";
 import Footer from "@/components/large/Footer";
 import Providers from "@/components/medium/Providers";
 import { Suspense } from "react";
+import 'react-toastify/dist/ReactToastify.css';
 
 const roboto = Roboto({ weight: ["400", "500", "700"], subsets: ["latin"] });
 

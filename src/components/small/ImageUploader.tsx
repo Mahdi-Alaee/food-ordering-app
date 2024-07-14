@@ -5,23 +5,24 @@ export default function ImageUploader({
   email,
   setState,
   setImage,
+  state,
 }: {
   email: string;
   setState: Dispatch<
-    SetStateAction<"" | "loading" | "ok" | "error" | "image uploaded" | 'image upload failed'>
+    SetStateAction<
+      "" | "image uploaded" | "image upload failed" | "image loading"
+    >
   >;
   setImage: Dispatch<SetStateAction<string>>;
+  state: "" | "image uploaded" | "image upload failed" | "image loading";
 }) {
-  const [loading, setLoading] = useState(false);
-
   return (
     <label>
       <UploadButton
         endpoint="imageUploader"
         onUploadError={(err: Error) => {
           console.log(err);
-          setState('image upload failed')
-          setLoading(false);
+          setState("image upload failed");
         }}
         onClientUploadComplete={async (response) => {
           const image = response[0].url;
@@ -35,21 +36,21 @@ export default function ImageUploader({
           if (res.ok) {
             setState("image uploaded");
             setImage(image);
+          } else {
+            setState("image upload failed");
           }
-
-          setLoading(false);
         }}
         className="hidden"
-        onUploadBegin={() => setLoading(true)}
-        disabled={loading}
+        onUploadBegin={() => setState("image loading")}
+        disabled={state === "image loading"}
       />
       <span
         className={`flex justify-center items-center border w-full py-2 rounded-xl mt-1 font-bold duration-150 cursor-pointer 
               hover:border-grayColor hover:bg-grayColor hover:text-white ${
-                loading ? "bg-gray-300 text-gray-700" : ""
+                state === "image loading" ? "bg-gray-300 text-gray-700" : ""
               }`}
       >
-        {loading ? "saving ..." : "Edit"}
+        {state === "image loading" ? "saving ..." : "Edit"}
       </span>
     </label>
   );

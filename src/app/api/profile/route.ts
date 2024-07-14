@@ -17,10 +17,11 @@ export async function PUT(req: Request) {
   const postalCode = body.postalCode || user?.postalCode;
   const city = body.city || user?.city;
   const country = body.country || user?.country;
+  const image = body.image || user?.image;
   if (user)
     res = await UserModel.updateOne(
       { email: body.email },
-      { name, phone, street, postalCode, city, country }
+      { name, phone, street, postalCode, city, country,image }
     );
 
   return Response.json(res);
