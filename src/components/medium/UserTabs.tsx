@@ -6,7 +6,7 @@ const userTabs = [{ id: 1, href: "/profile", text: "Profile" }];
 
 const adminTabs = [
   { id: 1, href: "/categories", text: "Categories" },
-  { id: 2, href: "/menu", text: "Menu Items" },
+  { id: 2, href: "/menu-items", text: "Menu Items" },
   { id: 3, href: "/users", text: "Users" },
 ];
 

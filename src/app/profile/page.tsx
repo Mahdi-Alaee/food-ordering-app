@@ -68,6 +68,7 @@ export default function Profile() {
           postalCode,
           city,
           country,
+          image: userImage
         }),
       }),
       {
@@ -127,7 +128,6 @@ export default function Profile() {
           <TextBox
             label="Email:"
             placeholder="Enter your email ..."
-            onChange={(e) => setNewName(e.target.value)}
             value={user?.email!}
             disabled
           />

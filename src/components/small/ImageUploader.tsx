@@ -1,11 +1,12 @@
 import { UploadButton } from "@/utils/uploadthing";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 export default function ImageUploader({
   email,
   setState,
   setImage,
   state,
+  children = 'Edit',
 }: {
   email: string;
   setState: Dispatch<
@@ -15,6 +16,7 @@ export default function ImageUploader({
   >;
   setImage: Dispatch<SetStateAction<string>>;
   state: "" | "image uploaded" | "image upload failed" | "image loading";
+  children?: ReactNode;
 }) {
   return (
     <label>
@@ -26,19 +28,19 @@ export default function ImageUploader({
         }}
         onClientUploadComplete={async (response) => {
           const image = response[0].url;
-          const res = await fetch("/api/profile", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, image }),
-          });
-          if (res.ok) {
+          // const res = await fetch("/api/profile", {
+          //   method: "PUT",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   body: JSON.stringify({ email, image }),
+          // });
+          // if (res.ok) {
             setState("image uploaded");
             setImage(image);
-          } else {
-            setState("image upload failed");
-          }
+          // } else {
+          //   setState("image upload failed");
+          // }
         }}
         className="hidden"
         onUploadBegin={() => setState("image loading")}
@@ -50,7 +52,7 @@ export default function ImageUploader({
                 state === "image loading" ? "bg-gray-300 text-gray-700" : ""
               }`}
       >
-        {state === "image loading" ? "saving ..." : "Edit"}
+        {state === "image loading" ? "saving ..." : children}
       </span>
     </label>
   );

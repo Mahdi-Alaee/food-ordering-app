@@ -7,4 +7,5 @@ const CategorySchema = new Schema(
   { timestamps: true }
 );
 
-export const CategoryModel = models?.Category || model("Category", CategorySchema);
+export const CategoryModel =
+  models?.Category || model("Category", CategorySchema);
