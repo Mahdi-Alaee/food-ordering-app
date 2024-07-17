@@ -7,7 +7,7 @@ import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -20,10 +20,11 @@ export default function NewMenuItem() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     console.log(state);
-    
+
     if (state !== "") {
       state === "image loading"
         ? toast.info("Loading ...")
@@ -45,20 +46,28 @@ export default function NewMenuItem() {
       image,
     };
 
-    toast.promise(
-      fetch("/api/menu-item", {
+    const CreateMenuItem = new Promise(async (resolve, reject) => {
+      const res = await fetch("/api/menu-item", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      }),
-      {
-        pending: "Loading ...",
-        success: "Menu item created successfully :)",
-        error: "An error is occured!",
-      }
-    );
+      });
+
+      if (res.ok) {
+        resolve(res);
+        setTimeout(() => {
+          router.push("/menu-items");
+        }, 2000);
+      } else reject();
+    });
+
+    toast.promise(CreateMenuItem, {
+      pending: "Loading ...",
+      success: "Menu item created successfully :)",
+      error: "An error is occured!",
+    });
   };
 
   if (isLoading) return "Loading ...";
@@ -111,7 +120,7 @@ export default function NewMenuItem() {
           >
             {/* item name */}
             <TextBox
-              label="first name and last name:"
+              label="Name:"
               placeholder="Enter item's First and last name ..."
               onChange={(e) => setName(e.target.value)}
               value={name}

@@ -9,3 +9,11 @@ export async function POST(req: Request) {
 
   return Response.json(res);
 }
+
+export async function GET() {
+  mongoose.connect(process.env.MONGO_URL!);
+  const data = await MenuItemModel.find();
+  console.log(data);
+
+  return Response.json(data);
+}

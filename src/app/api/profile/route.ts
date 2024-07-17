@@ -21,7 +21,7 @@ export async function PUT(req: Request) {
   if (user)
     res = await UserModel.updateOne(
       { email: body.email },
-      { name, phone, street, postalCode, city, country,image }
+      { name, phone, street, postalCode, city, country, image }
     );
 
   return Response.json(res);
@@ -35,7 +35,6 @@ export async function GET() {
     throw new Error("please signin first!");
   }
   const user = await UserModel.findOne({ email: session.user.email });
-  console.log({ user });
 
   return Response.json(user);
 }
