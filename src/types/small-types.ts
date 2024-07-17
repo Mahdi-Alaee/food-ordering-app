@@ -6,7 +6,7 @@ export interface Category {
 export interface MenuItem {
   _id: string;
   name: string;
-  desription: string;
+  description: string;
   price: string;
   image: string;
 }

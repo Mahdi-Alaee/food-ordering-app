@@ -18,7 +18,6 @@ export default function MenuItems() {
       const res = await fetch("/api/menu-item");
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
 
         setMenuItems(data);
       }
@@ -45,14 +44,15 @@ export default function MenuItems() {
         <div>
           {/* title */}
           {menuItems.length < 1 ? (
-            <span className="text-red-500">No items are avalible!</span>
+            <p className="text-red-500 text-center mt-12">No items are avalible!</p>
           ) : (
             <>
               <span className="text-sm">Edit category:</span>
               {/* items */}
-              <ul className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {menuItems.map((item) => (
-                  <li
+                  <Link
+                    href={`/menu-items/edit/${item._id}`}
                     key={item._id}
                     className="flex flex-col justify-between gap-y-4 bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
                   >
@@ -64,9 +64,9 @@ export default function MenuItems() {
                       height="10000"
                     />
                     <span className="text-center">{item.name}</span>
-                  </li>
+                  </Link>
                 ))}
-              </ul>
+              </div>
             </>
           )}
         </div>

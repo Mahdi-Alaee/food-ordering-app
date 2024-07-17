@@ -5,9 +5,10 @@ import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
+import { MenuItem } from "@/types/small-types";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -20,7 +21,27 @@ export default function NewMenuItem() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [menuItem, setMenuItem] = useState<MenuItem>();
   const router = useRouter();
+  const params = useParams();
+  const id = params.id[0];
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/menu-item");
+      if (res.ok) {
+        const data = (await res.json()) as MenuItem[];
+
+        const mainItem = data.find((item) => item._id === id);
+
+        setName(mainItem?.name || "");
+        setDescription(mainItem?.description || "");
+        setPrice(mainItem?.price || "");
+        setImage(mainItem?.image || "");
+        setMenuItem(mainItem);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     console.log(state);
@@ -40,16 +61,16 @@ export default function NewMenuItem() {
   const onCreateMenuItem = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
+      _id:id,
       name,
       description,
       price,
       image,
     };
-    console.log(data);
 
     const CreateMenuItem = new Promise(async (resolve, reject) => {
       const res = await fetch("/api/menu-item", {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -66,13 +87,14 @@ export default function NewMenuItem() {
 
     toast.promise(CreateMenuItem, {
       pending: "Loading ...",
-      success: "Menu item created successfully :)",
+      success: "Menu item Edited successfully :)",
       error: "An error is occured!",
     });
   };
 
   if (isLoading) return "Loading ...";
   else if (!user?.isAdmin!) redirect("/");
+  else if (!menuItem) redirect("/menu-items");
   return (
     <main className="mb-16">
       <UserTabs isAdmin={user?.isAdmin!} />
