@@ -106,7 +106,7 @@ export default function NewMenuItem() {
           className="rounded-lg text-black font-bold border flex justify-center gap-x-2 py-2 mb-8"
           href="/menu-items"
         >
-          <Left /> Create new menu
+          <Left /> Show menu item list
         </Link>
         <div className=" flex gap-x-6">
           {/* left */}
