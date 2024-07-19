@@ -1,6 +1,9 @@
 "use client";
 import Left from "@/components/icons/Left";
+import Plus from "@/components/icons/Plus";
 import Right from "@/components/icons/Right";
+import TargetDown from "@/components/icons/TargetDown";
+import Trash from "@/components/icons/Trash";
 import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
@@ -22,6 +25,8 @@ export default function NewMenuItem() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [menuItem, setMenuItem] = useState<MenuItem>();
+  const [isSizesOpen, setIsSizesOpen] = useState(false);
+  const [isExtrasOpen, setIsExtrasOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
   const id = params.id[0];
@@ -61,7 +66,7 @@ export default function NewMenuItem() {
   const onCreateMenuItem = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
-      _id:id,
+      _id: id,
       name,
       description,
       price,
@@ -162,6 +167,144 @@ export default function NewMenuItem() {
               onChange={(e) => setPrice(e.target.value)}
               value={price}
             />
+
+            {/* sizes */}
+            <div className="bg-gray-200 px-2 py-3 rounded-lg max-w-80">
+              <p
+                className="flex gap-x-2 text-black cursor-pointer"
+                onClick={() => setIsSizesOpen((prev) => !prev)}
+              >
+                {isSizesOpen ? (
+                  <span className="font-bold mb-3">Sizes</span>
+                ) : (
+                  <>
+                    <TargetDown />
+                    <span className="font-bold">Sizes</span>
+                    <span className="font-bold">(3)</span>
+                  </>
+                )}
+              </p>
+              {isSizesOpen && (
+                // {/* content */}
+                <div className="flex flex-col gap-y-3">
+                  {/* list */}
+                  <ul className="flex flex-col gap-y-3">
+                    {/* item */}
+                    <li className="flex justify-between items-end">
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Name" />
+                      </div>
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Extra price" />
+                      </div>
+                      {/* delete button */}
+                      <button
+                        type="button"
+                        className="p-3 flex gap-x-2 text-black font-bold bg-white rounded-xl"
+                      >
+                        <Trash />
+                      </button>
+                    </li>
+                    {/* item */}
+                    <li className="flex justify-between items-end">
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Name" />
+                      </div>
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Extra price" />
+                      </div>
+                      {/* delete button */}
+                      <button
+                        type="button"
+                        className="p-3 flex gap-x-2 text-black font-bold bg-white rounded-xl"
+                      >
+                        <Trash />
+                      </button>
+                    </li>
+                  </ul>
+                  <button
+                    type="button"
+                    className="p-2 flex justify-center gap-x-2 text-black font-bold bg-white rounded-xl"
+                  >
+                    <Plus />
+                    <span>Add item size</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Extras */}
+            <div className="bg-gray-200 px-2 py-3 rounded-lg max-w-80">
+              <p
+                className="flex gap-x-2 text-black cursor-pointer"
+                onClick={() => setIsExtrasOpen((prev) => !prev)}
+              >
+                {isExtrasOpen ? (
+                  <span className="font-bold mb-3">Extras</span>
+                ) : (
+                  <>
+                    <TargetDown />
+                    <span className="font-bold">Extras</span>
+                    <span className="font-bold">(3)</span>
+                  </>
+                )}
+              </p>
+              {isExtrasOpen && (
+                // {/* content */}
+                <div className="flex flex-col gap-y-3">
+                  {/* list */}
+                  <ul className="flex flex-col gap-y-3">
+                    {/* item */}
+                    <li className="flex justify-between items-end">
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Name" />
+                      </div>
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Extra price" />
+                      </div>
+                      {/* delete button */}
+                      <button
+                        type="button"
+                        className="p-3 flex gap-x-2 text-black font-bold bg-white rounded-xl"
+                      >
+                        <Trash />
+                      </button>
+                    </li>
+                    {/* item */}
+                    <li className="flex justify-between items-end">
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Name" />
+                      </div>
+                      {/* input */}
+                      <div className="w-5/12">
+                        <TextBox className="bg-gray-50" label="Extra price" />
+                      </div>
+                      {/* delete button */}
+                      <button
+                        type="button"
+                        className="p-3 flex gap-x-2 text-black font-bold bg-white rounded-xl"
+                      >
+                        <Trash />
+                      </button>
+                    </li>
+                  </ul>
+                  <button
+                    type="button"
+                    className="p-2 flex justify-center gap-x-2 text-black font-bold bg-white rounded-xl"
+                  >
+                    <Plus />
+                    <span>Add item size</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* submit */}
             <button
