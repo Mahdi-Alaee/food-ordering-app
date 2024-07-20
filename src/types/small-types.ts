@@ -9,4 +9,12 @@ export interface MenuItem {
   description: string;
   price: string;
   image: string;
+  sizes: MenuItemSizeOrExtra[];
+  extras: MenuItemSizeOrExtra[];
+}
+
+export interface MenuItemSizeOrExtra {
+  id: string;
+  name: string;
+  price: string;
 }
