@@ -1,6 +1,7 @@
 "use client";
 
 import UserTabs from "@/components/medium/UserTabs";
+import DeleteButton from "@/components/small/DeleteButton";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
 import { Category } from "@/types/small-types";
@@ -50,7 +51,7 @@ export default function Categories() {
 
       if (res.ok) {
         setName("");
-        getCategories()
+        getCategories();
         resolve(res);
       } else reject();
     });
@@ -89,6 +90,10 @@ export default function Categories() {
   useEffect(() => {
     if ("name" in selectedCategory) setName(selectedCategory.name);
   }, [selectedCategory]);
+
+  const onDeleteCategory = (id: string) => {
+    console.log(id + " deleted!");
+  };
 
   if (isLoading) {
     return "Loading ...";
@@ -139,10 +144,18 @@ export default function Categories() {
                 {categories.map((cat) => (
                   <li
                     key={cat._id}
-                    className="bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
+                    className="flex justify-between bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
                     onClick={() => setSelectedCategory(cat)}
                   >
-                    {cat.name}
+                    <span>{cat.name}</span>
+
+                    {/* buttons */}
+                    <div className="flex gap-x-2">
+                      <button className="py-2 px-6 rounded-lg border border-gray-300" type="button">Edit</button>
+                      <DeleteButton className="py-2 px-6 rounded-lg border border-gray-300" onDelete={() => onDeleteCategory(cat._id)}>
+                        Delete
+                      </DeleteButton>
+                    </div>
                   </li>
                 ))}
               </ul>
