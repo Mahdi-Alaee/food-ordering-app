@@ -32,3 +32,12 @@ export async function GET() {
 
   return Response.json(res);
 }
+
+export async function DELETE(req: Request) {
+  const url = new URL(req.url);
+  const _id = url.searchParams.get("_id");
+  mongoose.connect(process.env.MONGO_URL!);
+  const res = await CategoryModel.deleteOne({ _id });
+
+  return Response.json(res);
+}

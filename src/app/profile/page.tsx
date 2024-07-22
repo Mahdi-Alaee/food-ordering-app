@@ -39,7 +39,7 @@ export default function Profile() {
         ? toast.info("Loading ...")
         : state === "image uploaded"
         ? toast.success("Your profile photo changed successfully")
-        : toast.error("an error is occured!");
+        : toast.error("an error occured!");
       setTimeout(() => {
         setState("");
       }, 2000);

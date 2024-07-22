@@ -25,3 +25,12 @@ export async function PUT(req: Request) {
 
   return Response.json(res);
 }
+
+export async function DELETE(req: Request) {
+  const url = new URL(req.url);
+  const _id = url.searchParams.get("_id");
+  mongoose.connect(process.env.MONGO_URL!);
+  const res = await MenuItemModel.deleteOne({ _id });
+
+  return Response.json(res);
+}

@@ -18,7 +18,11 @@ import { toast, ToastContainer } from "react-toastify";
 export default function NewMenuItem() {
   const { isLoading, user } = useProfile();
   const [state, setState] = useState<
-    "" | "image uploaded" | "image upload failed" | "image loading"
+    | ""
+    | "image uploaded"
+    | "image upload failed"
+    | "image loading"
+    | "redirecting"
   >("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
@@ -35,14 +39,15 @@ export default function NewMenuItem() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(state);
 
     if (state !== "") {
       state === "image loading"
         ? toast.info("Loading ...")
         : state === "image uploaded"
         ? toast.success("Your profile photo changed successfully")
-        : toast.error("an error is occured!");
+        : state === "image upload failed"
+        ? toast.error("an error occured!")
+        : null;
       setTimeout(() => {
         setState("");
       }, 2000);
@@ -72,6 +77,7 @@ export default function NewMenuItem() {
 
       if (res.ok) {
         resolve(res);
+        setState("redirecting");
         setTimeout(() => {
           router.push("/menu-items");
         }, 2000);
@@ -81,7 +87,7 @@ export default function NewMenuItem() {
     toast.promise(CreateMenuItem, {
       pending: "Loading ...",
       success: "Menu item created successfully :)",
-      error: "An error is occured!",
+      error: "An error occured!",
     });
   };
 

@@ -5,6 +5,7 @@ import Right from "@/components/icons/Right";
 import TargetDown from "@/components/icons/TargetDown";
 import Trash from "@/components/icons/Trash";
 import UserTabs from "@/components/medium/UserTabs";
+import DeleteButton from "@/components/small/DeleteButton";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
@@ -18,7 +19,11 @@ import { toast, ToastContainer } from "react-toastify";
 export default function NewMenuItem() {
   const { isLoading, user } = useProfile();
   const [state, setState] = useState<
-    "" | "image uploaded" | "image upload failed" | "image loading"
+    | ""
+    | "image uploaded"
+    | "image upload failed"
+    | "image loading"
+    | "redirecting"
   >("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
@@ -57,14 +62,14 @@ export default function NewMenuItem() {
   }, []);
 
   useEffect(() => {
-    console.log(state);
-
     if (state !== "") {
       state === "image loading"
         ? toast.info("Loading ...")
         : state === "image uploaded"
         ? toast.success("Your profile photo changed successfully")
-        : toast.error("an error is occured!");
+        : state === "image upload failed"
+        ? toast.error("an error occured!")
+        : null;
       setTimeout(() => {
         setState("");
       }, 2000);
@@ -94,6 +99,7 @@ export default function NewMenuItem() {
 
       if (res.ok) {
         resolve(res);
+        setState("redirecting");
         setTimeout(() => {
           router.push("/menu-items");
         }, 2000);
@@ -103,7 +109,7 @@ export default function NewMenuItem() {
     toast.promise(EditMenuItem, {
       pending: "Loading ...",
       success: "Menu item Edited successfully :)",
-      error: "An error is occured!",
+      error: "An error occured!",
     });
   };
 
@@ -131,6 +137,27 @@ export default function NewMenuItem() {
 
   const onDeleteExtra = (id: string) => {
     setExtras((prev) => prev.filter((extra) => extra.id !== id));
+  };
+
+  const onDeleteThisMenuItem = async () => {
+    const deleteThisMenuItem = new Promise(async (resolve, reject) => {
+      const res = await fetch("/api/menu-item?_id=" + id, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        resolve(res);
+        setState("redirecting");
+        setTimeout(() => {
+          router.push("/menu-items");
+        }, 2000);
+      } else reject();
+    });
+
+    toast.promise(deleteThisMenuItem, {
+      pending: "Loading ...",
+      success: "Menu-item is deleted successfully",
+      error: "An error occured!",
+    });
   };
 
   if (isLoading) return "Loading ...";
@@ -392,6 +419,13 @@ export default function NewMenuItem() {
             >
               Save
             </button>
+            <DeleteButton
+              className="p-2 rounded-xl border border-gray-300 disabled:opacity-70"
+              onDelete={onDeleteThisMenuItem}
+              disabled={state !== ""}
+            >
+              Delete this menu item
+            </DeleteButton>
           </form>
         </div>
       </div>

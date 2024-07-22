@@ -63,14 +63,14 @@ export default function Categories() {
       toast.promise(EditCategoryPromise, {
         pending: "Loading ...",
         success: "The category edited successfully",
-        error: "An error is occured",
+        error: "An error occured",
       });
     } else {
       console.log(2);
       toast.promise(CreateCategoryPromise, {
         pending: "Loading ...",
         success: "The category edited successfully",
-        error: "An error is occured",
+        error: "An error occured",
       });
     }
   };
@@ -92,7 +92,21 @@ export default function Categories() {
   }, [selectedCategory]);
 
   const onDeleteCategory = (id: string) => {
-    console.log(id + " deleted!");
+    const deleteCategory = new Promise(async (resolve, reject) => {
+      const res = await fetch("/api/category?_id=" + id, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        resolve(res);
+        getCategories();
+      } else reject();
+    });
+
+    toast.promise(deleteCategory, {
+      pending: "Loading ...",
+      success: "Category is deleted successfully",
+      error: "An error occured!",
+    });
   };
 
   if (isLoading) {
@@ -130,6 +144,16 @@ export default function Categories() {
           >
             {"name" in selectedCategory ? "Edit" : "Create"}
           </button>
+          <button
+            className="w-3/12 p-2 rounded-xl border border-gray-300 hover:bg-gray-100 disabled:opacity-70"
+            type="button"
+            onClick={() => {
+              setSelectedCategory({});
+              setName("");
+            }}
+          >
+            Cancel
+          </button>
         </form>
         {/* categories */}
         <div>
@@ -144,15 +168,23 @@ export default function Categories() {
                 {categories.map((cat) => (
                   <li
                     key={cat._id}
-                    className="flex justify-between bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
-                    onClick={() => setSelectedCategory(cat)}
+                    className="flex justify-between items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
                   >
                     <span>{cat.name}</span>
 
                     {/* buttons */}
                     <div className="flex gap-x-2">
-                      <button className="py-2 px-6 rounded-lg border border-gray-300" type="button">Edit</button>
-                      <DeleteButton className="py-2 px-6 rounded-lg border border-gray-300" onDelete={() => onDeleteCategory(cat._id)}>
+                      <button
+                        onClick={() => setSelectedCategory(cat)}
+                        className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-gray-100"
+                        type="button"
+                      >
+                        Edit
+                      </button>
+                      <DeleteButton
+                        className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-red-500 hover:text-white"
+                        onDelete={() => onDeleteCategory(cat._id)}
+                      >
                         Delete
                       </DeleteButton>
                     </div>

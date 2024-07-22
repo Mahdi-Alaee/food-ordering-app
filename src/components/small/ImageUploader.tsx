@@ -11,11 +11,11 @@ export default function ImageUploader({
   email: string;
   setState: Dispatch<
     SetStateAction<
-      "" | "image uploaded" | "image upload failed" | "image loading"
+      "" | "image uploaded" | "image upload failed" | "image loading" | 'redirecting'
     >
   >;
   setImage: Dispatch<SetStateAction<string>>;
-  state: "" | "image uploaded" | "image upload failed" | "image loading";
+  state: "" | "image uploaded" | "image upload failed" | "image loading" | 'redirecting';
   children?: ReactNode;
 }) {
   return (
