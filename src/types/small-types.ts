@@ -21,3 +21,10 @@ export interface MenuItemSizeOrExtra {
   name: string;
   price: string;
 }
+
+export type State =
+  | ""
+  | "image uploaded"
+  | "image upload failed"
+  | "image loading"
+  | "redirecting";

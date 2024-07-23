@@ -2,18 +2,18 @@ import { FormEvent, useEffect, useState } from "react";
 import Plus from "../icons/Plus";
 import TextBox from "../small/TextBox";
 import TargetDown from "../icons/TargetDown";
-import { Category, MenuItem, MenuItemSizeOrExtra } from "@/types/small-types";
+import {
+  Category,
+  MenuItem,
+  MenuItemSizeOrExtra,
+  State,
+} from "@/types/small-types";
 import Trash from "../icons/Trash";
 import DeleteButton from "../small/DeleteButton";
 
 interface MenuItemFormProps {
   onSubmit: (data: MenuItem) => void;
-  state:
-    | ""
-    | "image uploaded"
-    | "image upload failed"
-    | "image loading"
-    | "redirecting";
+  state: State;
   categories: Category[];
   isShowDeleteButton?: boolean;
   onDelete?: Function;
@@ -134,7 +134,7 @@ export default function MenuItemForm({
       />
 
       {/* sizes */}
-      <div className="bg-gray-200 px-2 py-3 rounded-lg max-w-80">
+      <div className="bg-gray-200 px-2 py-3 rounded-lg">
         <p
           className="flex gap-x-2 text-black cursor-pointer"
           onClick={() => setIsSizesOpen((prev) => !prev)}
@@ -221,7 +221,7 @@ export default function MenuItemForm({
       </div>
 
       {/* Extras */}
-      <div className="bg-gray-200 px-2 py-3 rounded-lg max-w-80">
+      <div className="bg-gray-200 px-2 py-3 rounded-lg">
         <p
           className="flex gap-x-2 text-black cursor-pointer"
           onClick={() => setIsExtrasOpen((prev) => !prev)}

@@ -6,25 +6,25 @@ import TargetDown from "@/components/icons/TargetDown";
 import Trash from "@/components/icons/Trash";
 import MenuItemForm from "@/components/medium/MenuItemForm";
 import UserTabs from "@/components/medium/UserTabs";
+import EditableImage from "@/components/small/EditableImage";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
-import { Category, MenuItem, MenuItemSizeOrExtra } from "@/types/small-types";
+import {
+  Category,
+  MenuItem,
+  MenuItemSizeOrExtra,
+  State,
+} from "@/types/small-types";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
-import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function NewMenuItem() {
   const { isLoading, user } = useProfile();
-  const [state, setState] = useState<
-    | ""
-    | "image uploaded"
-    | "image upload failed"
-    | "image loading"
-    | "redirecting"
-  >("");
+  const [state, setState] = useState<State>("");
   const [image, setImage] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -88,7 +88,7 @@ export default function NewMenuItem() {
       <UserTabs isAdmin={user?.isAdmin!} />
 
       {/* content */}
-      <div className="max-w-md mx-auto">
+      <div className="max-w-xl mx-auto">
         {/* the link of menu items page */}
         <Link
           className="rounded-lg text-black font-bold border flex justify-center gap-x-2 py-2 mb-8"
@@ -99,30 +99,12 @@ export default function NewMenuItem() {
         <div className=" flex gap-x-6">
           {/* left */}
           <div className="max-w-2/6">
-            {/* profile photo */}
-            {image ? (
-              <Image
-                src={image}
-                alt="person profile image"
-                width="10000"
-                height="10000"
-                className="w-32 object-contain rounded-xl mb-2"
-                priority={true}
-              />
-            ) : (
-              <span className="bg-gray-200 py-5 flex justify-center text-nowrap rounded-md text-sm w-28">
-                No Image
-              </span>
-            )}
-            {/* edit profile photo */}
-            <ImageUploader
+            <EditableImage
+              image={image}
+              setImage={setImage}
               state={state}
               setState={setState}
-              email={user?.email!}
-              setImage={setImage}
-            >
-              Add
-            </ImageUploader>
+            />
           </div>
           {/* right */}
           <MenuItemForm

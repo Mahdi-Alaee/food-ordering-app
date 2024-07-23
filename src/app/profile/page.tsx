@@ -84,7 +84,7 @@ export default function Profile() {
       {/* user tabs */}
       <UserTabs isAdmin={user?.isAdmin!} />
       {/* content */}
-      <div className="max-w-md mx-auto flex gap-x-6">
+      <div className="max-w-xl mx-auto flex gap-x-6">
         {/* left */}
         <div className="max-w-2/6">
           {userImage ? (

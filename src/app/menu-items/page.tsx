@@ -31,7 +31,7 @@ export default function MenuItems() {
       <UserTabs isAdmin={user?.isAdmin!} />
 
       {/* content */}
-      <div className="max-w-md mx-auto">
+      <div className="max-w-xl mx-auto">
         {/* the link of create menu page */}
         <Link
           className="rounded-lg text-black font-bold border flex justify-center gap-x-2 py-2"

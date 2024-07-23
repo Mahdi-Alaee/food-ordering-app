@@ -121,7 +121,7 @@ export default function Categories() {
       {/* tabs */}
       <UserTabs isAdmin={user?.isAdmin!} />
       {/* content */}
-      <div className="max-w-md mx-auto">
+      <div className="max-w-xl mx-auto">
         {/* form */}
         <form
           className="flex gap-x-2 items-end justify-between mb-16"

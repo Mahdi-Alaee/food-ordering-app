@@ -2,13 +2,11 @@ import { UploadButton } from "@/utils/uploadthing";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 export default function ImageUploader({
-  email,
   setState,
   setImage,
   state,
   children = 'Edit',
 }: {
-  email: string;
   setState: Dispatch<
     SetStateAction<
       "" | "image uploaded" | "image upload failed" | "image loading" | 'redirecting'
