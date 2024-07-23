@@ -8,7 +8,7 @@ import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
-import { MenuItemSizeOrExtra } from "@/types/small-types";
+import { Category, MenuItemSizeOrExtra } from "@/types/small-types";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
@@ -36,10 +36,11 @@ export default function NewMenuItem() {
   const [sizePrice, setSizePrice] = useState("");
   const [extraName, setExtraName] = useState("");
   const [extraPrice, setExtraPrice] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [category, setCategory] = useState<string>('f');
   const router = useRouter();
 
   useEffect(() => {
-
     if (state !== "") {
       state === "image loading"
         ? toast.info("Loading ...")
@@ -54,6 +55,14 @@ export default function NewMenuItem() {
     }
   }, [state]);
 
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/category");
+      const data = await res.json();
+      setCategories(data);
+    })();
+  }, []);
+
   const onCreateMenuItem = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
@@ -63,6 +72,7 @@ export default function NewMenuItem() {
       image,
       sizes,
       extras,
+      category
     };
     console.log(data);
 
@@ -179,6 +189,20 @@ export default function NewMenuItem() {
               onChange={(e) => setDescription(e.target.value)}
               value={description}
             />
+            <div className="flex flex-col">
+              {/* label */}
+              <span className="text-sm">Category:</span>
+              {/* category */}
+              <select value={category} onChange={(e) => setCategory(e.target.value)} className="border p-2 rounded-xl outline-none bg-gray-200 disabled:bg-gray-300">
+                <option value="f">Choose category ...</option>
+                {categories.map(({ _id, name }) => (
+                  <option key={_id} value={_id}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* price */}
             <TextBox
               label="Base price:"

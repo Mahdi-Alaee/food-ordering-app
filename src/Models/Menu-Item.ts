@@ -1,4 +1,4 @@
-import { model, models, Schema } from "mongoose";
+import mongoose, { model, models, Schema } from "mongoose";
 
 const MenuItemSchema = new Schema(
   {
@@ -8,6 +8,7 @@ const MenuItemSchema = new Schema(
     image: { type: String, require: true },
     sizes: { type: Array },
     extras: { type: Array },
+    category: { type: mongoose.Types.ObjectId },
   },
   { timestamps: true }
 );
