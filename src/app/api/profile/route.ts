@@ -21,7 +21,7 @@ export async function PUT(req: Request) {
   if (user)
     res = await UserModel.updateOne(
       { email: body.email },
-      { name, phone, street, postalCode, city, country, image }
+      { name, phone, street, postalCode, city, country, image,isAdmin:user.isAdmin }
     );
 
   return Response.json(res);

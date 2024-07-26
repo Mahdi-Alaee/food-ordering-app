@@ -4,15 +4,17 @@ import UserTabs from "@/components/medium/UserTabs";
 import DeleteButton from "@/components/small/DeleteButton";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
+import { UserData } from "@/types/session";
 import { Category } from "@/types/small-types";
 import { User } from "next-auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Users() {
   const { isLoading, user } = useProfile();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserData[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -58,12 +60,12 @@ export default function Users() {
 
                     {/* buttons */}
                     <div className="flex gap-x-2">
-                      <button
+                      <Link
                         className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-gray-100"
-                        type="button"
+                        href={'/users/'+ user._id}
                       >
                         Edit
-                      </button>
+                      </Link>
                       <DeleteButton
                         className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-red-500 hover:text-white"
                         onDelete={() => console.log("deleted!")}

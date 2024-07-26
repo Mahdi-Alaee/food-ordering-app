@@ -24,9 +24,15 @@ export default function Register() {
         body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
-        const user = await res.json();
-        console.log({user});
+        const { email, password } = await res.json();
+        console.log({email,password});
         
+        signIn("credentials", {
+          email,
+          password,
+          redirect: true,
+          callbackUrl: "/",
+        });
       } else {
         setError(
           "your entered data is not valid (password must be greater than 7 caracters and email must be unique)"

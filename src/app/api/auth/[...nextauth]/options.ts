@@ -25,8 +25,11 @@ export const options: AuthOptions = {
         try {
           mongoose.connect(process.env.MONGO_URL!);
           const user = await UserModel.findOne({ email: credentials?.email });
+          console.log({ user });
 
           if (bcrypt.compareSync(credentials?.password!, user.password)) {
+            console.log("logged in!");
+
             return user;
           }
         } catch (err) {
@@ -61,7 +64,7 @@ export const options: AuthOptions = {
           postalCode: profile.postalCode,
           city: profile.city,
           country: profile.country,
-        }
+        };
       },
     }),
   ],

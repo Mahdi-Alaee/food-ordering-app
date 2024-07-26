@@ -4,8 +4,9 @@ import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
+import { UserData } from "@/types/session";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -24,18 +25,33 @@ export default function Profile() {
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const [admin, setAdmin] = useState(false);
+  const [email, setEmail] = useState("");
 
+  const { _id } = useParams();
   const { isLoading, user } = useProfile();
 
   useEffect(() => {
-    setNewName(user?.name || "");
-    setUserImage(user?.image || "");
-    setPhone(user?.phone || "");
-    setStreet(user?.street || "");
-    setPostalCode(user?.postalCode || "");
-    setCity(user?.city || "");
-    setCountry(user?.country || "");
-  }, [user]);
+    (async () => {
+      let mainUser;
+      const res = await fetch("/api/user");
+      if (res.ok) {
+        const users = (await res.json()) as UserData[];
+        mainUser = users.find((user) => user._id === _id);
+      }
+      console.log({mainUser});
+      
+      setNewName(mainUser?.name || "");
+      setUserImage(mainUser?.image || "");
+      setPhone(mainUser?.phone || "");
+      setStreet(mainUser?.street || "");
+      setPostalCode(mainUser?.postalCode || "");
+      setCity(mainUser?.city || "");
+      setCountry(mainUser?.country || "");
+      setAdmin(mainUser?.isAdmin || false);
+      setEmail(mainUser?.email || "");
+    })();
+  }, []);
 
   useEffect(() => {
     if (state !== "") {
@@ -59,21 +75,21 @@ export default function Profile() {
   const onEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     toast.promise(
-      fetch("/api/profile", {
+      fetch("/api/user?_id=" + user._id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: user?.email,
-          newName,
+          email,
+          name: newName,
           phone,
           street,
           postalCode,
           city,
           country,
           image: userImage,
-          isAdmin: Boolean(user.isAdmin),
+          isAdmin: admin,
         }),
       }),
       {
@@ -132,8 +148,8 @@ export default function Profile() {
           <TextBox
             label="Email:"
             placeholder="Enter your email ..."
-            value={user?.email!}
-            disabled
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           {/* phone */}
           <TextBox
@@ -173,6 +189,16 @@ export default function Profile() {
             placeholder="Enter your country..."
             value={country}
           />
+          {/* admin */}
+          <label className="flex gap-x-2 cursor-pointer">
+            <span>admin:</span>
+            <input
+              checked={admin}
+              onChange={(e) => setAdmin(e.target.checked)}
+              name="admin"
+              type="checkbox"
+            />
+          </label>
           {/* submit */}
           <button
             className="p-2 rounded-xl bg-redColor text-white disabled:opacity-70"

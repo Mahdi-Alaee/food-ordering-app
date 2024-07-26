@@ -6,6 +6,7 @@ export interface SessionData {
 }
 
 export interface UserData {
+  _id?: string | null;
   name?: string | null;
   email?: string | null;
   image?: string | null;
