@@ -75,7 +75,7 @@ export default function Profile() {
   const onEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     toast.promise(
-      fetch("/api/user?_id=" + user._id, {
+      fetch("/api/user?_id=" + _id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

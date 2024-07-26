@@ -21,11 +21,13 @@ export default function Login() {
     setError("");
     try {
       const res = await signIn("credentials", {
-        email,
-        password,
         redirect: false,
         callbackUrl,
+        email,
+        password,
       });
+      console.log({res});
+      
       if (res?.ok) {
         router.push(callbackUrl);
       } else {

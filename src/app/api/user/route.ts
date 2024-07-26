@@ -11,7 +11,7 @@ export async function PUT(req: Request) {
   const url = new URL(req.url);
   const _id = url.searchParams.get("_id");
   const body = await req.json();
-  console.log({body});
+  console.log({_id,body});
 
   mongoose.connect(process.env.MONGO_URL!);
   const res = await UserModel.updateOne({ _id }, body);
