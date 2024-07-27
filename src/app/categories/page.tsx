@@ -63,14 +63,14 @@ export default function Categories() {
       toast.promise(EditCategoryPromise, {
         pending: "Loading ...",
         success: "The category edited successfully",
-        error: "An error occured",
+        error: "An error has occured",
       });
     } else {
       console.log(2);
       toast.promise(CreateCategoryPromise, {
         pending: "Loading ...",
         success: "The category edited successfully",
-        error: "An error occured",
+        error: "An error has occured",
       });
     }
   };
@@ -105,7 +105,7 @@ export default function Categories() {
     toast.promise(deleteCategory, {
       pending: "Loading ...",
       success: "Category is deleted successfully",
-      error: "An error occured!",
+      error: "An error has occured!",
     });
   };
 

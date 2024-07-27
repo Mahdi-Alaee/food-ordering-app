@@ -53,7 +53,7 @@ export default function NewMenuItem() {
         : state === "image uploaded"
         ? toast.success("Your profile photo changed successfully")
         : state === "image upload failed"
-        ? toast.error("an error occured!")
+        ? toast.error("An error has occured!")
         : null;
       setTimeout(() => {
         setState("");
@@ -89,7 +89,7 @@ export default function NewMenuItem() {
     toast.promise(EditMenuItem, {
       pending: "Loading ...",
       success: "Menu item Edited successfully :)",
-      error: "An error occured!",
+      error: "An error has occured!",
     });
   };
 
@@ -110,7 +110,7 @@ export default function NewMenuItem() {
     toast.promise(deleteThisMenuItem, {
       pending: "Loading ...",
       success: "Menu-item is deleted successfully",
-      error: "An error occured!",
+      error: "An error has occured!",
     });
   };
 

@@ -35,7 +35,7 @@ export default function Login() {
       }
     } catch (err) {
       console.log("catch", err);
-      setError("an error occured!");
+      setError("An error has occured!");
     }
     setIsLoading(false);
   };
