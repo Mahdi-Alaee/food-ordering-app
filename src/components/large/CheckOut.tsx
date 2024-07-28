@@ -1,8 +1,27 @@
+'use client'
+
 import withSectionHeader from "@/HOFs/withSectionHeader";
 import FoodBox from "../small/FoodBox";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { MenuItem } from "@/types/small-types";
 
 function CheckOut() {
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/menu-item");
+
+      if (res.ok) {
+        const items = await res.json();
+        console.log(items);
+        
+        setMenuItems(items);
+      }
+    })();
+  }, []);
+
   return (
     // foods container
     <div className="grid grid-cols-3 gap-4 mb-16">
@@ -22,12 +41,9 @@ function CheckOut() {
           className="-mt-28 h-56 w-32"
         />
       </div>
-      <FoodBox />
-      <FoodBox />
-      <FoodBox />
-      <FoodBox />
-      <FoodBox />
-      <FoodBox />
+    {menuItems.slice(0,3).map(item => (
+      <FoodBox key={item._id} {...item} />
+    ))}
     </div>
   );
 }
