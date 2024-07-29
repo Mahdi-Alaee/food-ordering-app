@@ -58,7 +58,7 @@ export default function MenuItems() {
                   >
                     <Image
                       className=""
-                      src={item.image}
+                      src={item.image!}
                       alt="menu item"
                       width="10000"
                       height="10000"
