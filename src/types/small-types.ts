@@ -28,3 +28,7 @@ export type State =
   | "image upload failed"
   | "image loading"
   | "redirecting";
+
+export interface Cart extends MenuItem {
+  count: number;
+}

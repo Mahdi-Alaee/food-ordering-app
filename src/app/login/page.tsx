@@ -26,7 +26,6 @@ export default function Login() {
         email,
         password,
       });
-      console.log({res});
       
       if (res?.ok) {
         router.push(callbackUrl);
@@ -34,7 +33,6 @@ export default function Login() {
         setError("The credentials is not valid!");
       }
     } catch (err) {
-      console.log("catch", err);
       setError("An error has occured!");
     }
     setIsLoading(false);

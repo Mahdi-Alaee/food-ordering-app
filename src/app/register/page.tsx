@@ -25,7 +25,6 @@ export default function Register() {
       });
       if (res.ok) {
         const { email, password } = await res.json();
-        console.log({email,password});
         
         // signIn("credentials", {
         //   email,

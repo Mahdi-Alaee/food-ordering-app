@@ -15,7 +15,6 @@ function CheckOut() {
 
       if (res.ok) {
         const items = await res.json();
-        console.log(items);
         
         setMenuItems(items);
       }

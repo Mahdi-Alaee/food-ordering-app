@@ -39,7 +39,6 @@ export default function Profile() {
         const users = (await res.json()) as UserData[];
         mainUser = users.find((user) => user._id === _id);
       }
-      console.log({mainUser});
       
       setNewName(mainUser?.name || "");
       setUserImage(mainUser?.image || "");

@@ -55,10 +55,8 @@ export default function Categories() {
         resolve(res);
       } else reject();
     });
-    console.log(selectedCategory);
 
     if ("name" in selectedCategory) {
-      console.log(1);
 
       toast.promise(EditCategoryPromise, {
         pending: "Loading ...",
@@ -66,7 +64,6 @@ export default function Categories() {
         error: "An error has occured",
       });
     } else {
-      console.log(2);
       toast.promise(CreateCategoryPromise, {
         pending: "Loading ...",
         success: "The category edited successfully",
