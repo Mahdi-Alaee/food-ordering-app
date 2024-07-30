@@ -5,6 +5,7 @@ import OvalButton from "./OvalButton";
 import { Cart, MenuItem } from "@/types/small-types";
 import { AppContext, AppContextType } from "@/Context/app";
 import { useContext, useEffect, useState } from "react";
+import Trash from "../icons/Trash";
 
 export default function FoodBox({
   _id,
@@ -16,11 +17,15 @@ export default function FoodBox({
   extras,
   category,
 }: MenuItem) {
-  const { addToCart, cart } = useContext(AppContext) as AppContextType;
+  const { addToCart, cart, removeFromCart } = useContext(
+    AppContext
+  ) as AppContextType;
   const [inCart, setInCart] = useState<Cart | undefined>(undefined);
-  const [mainItem,setMainItem] = useState<Cart>();
+  let mainItem: Cart;
 
   useEffect(() => {
+    console.log(cart);
+
     setInCart(() => cart.find((item) => item._id === _id));
   }, [cart]);
 
@@ -44,8 +49,8 @@ export default function FoodBox({
         {/* cart button */}
         <OvalButton
           className="bg-redColor flex-wrap justify-center"
-          onClick={() =>
-            addToCart({
+          onClick={() => {
+            mainItem = {
               _id,
               name,
               description,
@@ -55,17 +60,37 @@ export default function FoodBox({
               extras,
               category,
               count: inCart?.count || 1,
-            })
-          }
+            };
+            inCart || addToCart(mainItem!);
+          }}
+          type="button"
         >
           {inCart ? (
             <>
-             <span>-</span> | <span>{inCart.count}</span> | <span>+</span>
+              <span
+                onClick={() => {
+                  setTimeout(() => {
+                    removeFromCart(mainItem._id!);
+                  }, 5);
+                }}
+              >
+                {inCart.count > 1 ? "-" : <Trash className="size-5" />}
+              </span>{" "}
+              | <span>{inCart.count}</span> |{" "}
+              <span
+                onClick={() => {
+                  setTimeout(() => {
+                    addToCart(mainItem);
+                  }, 5);
+                }}
+              >
+                +
+              </span>
             </>
           ) : (
-            <>
+            <span>
               Add to cart <span>${price}</span>
-            </>
+            </span>
           )}
         </OvalButton>
       </div>

@@ -1,4 +1,6 @@
-export default function Right({className = 'size-6'}) {
+import { IconProps } from "@/types/small-types";
+
+export default function Right({ className = "size-6" }: IconProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

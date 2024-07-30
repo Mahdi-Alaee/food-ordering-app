@@ -39,18 +39,20 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   const removeFromCart = (itemId: string) => {
     setCart((prev) => {
-      let isHeigherThanOne = false;
-      const res = prev.some((item) => {
+      const isHeigherThanOne = prev.some((item) => {
         console.log("loop");
 
         if (item._id === itemId && item.count > 1) {
-          isHeigherThanOne = true;
           return true;
         }
       });
-      console.log({ res });
-
-      return prev;
+      if (isHeigherThanOne) {
+        return prev.map((item) =>
+          item._id === itemId ? { ...item, count: item.count - 1 } : item
+        );
+      } else {
+        return prev.filter((item) => item._id !== itemId);
+      }
     });
   };
 

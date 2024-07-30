@@ -32,3 +32,7 @@ export type State =
 export interface Cart extends MenuItem {
   count: number;
 }
+
+export interface IconProps {
+  className?: string
+}
