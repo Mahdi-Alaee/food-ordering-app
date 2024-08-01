@@ -1,7 +1,14 @@
-import { MenuItem } from "@/types/small-types";
+import { MenuItem, MenuItemSizeOrExtra } from "@/types/small-types";
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import OvalButton from "../small/OvalButton";
+import { AppContext, AppContextType } from "@/Context/app";
 
 interface AddToCartModalProps {
   isOpen: boolean;
@@ -14,7 +21,23 @@ export default function AddToCartModal({
   menuItem,
   setIsOpen,
 }: AddToCartModalProps) {
-  const { name, description, image, price, sizes, extras } = menuItem;
+  const { _id, name, description, image, price, sizes, extras } = menuItem;
+  const [size, setSize] = useState<MenuItemSizeOrExtra>();
+  const [selectedExtras, setSelectedExtras] = useState<MenuItemSizeOrExtra[]>(
+    []
+  );
+  const [totalPrice, setTotalPrice] = useState<number>();
+  const { addToCart } = useContext(AppContext) as AppContextType;
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let sum = +price!;
+    if (size?.price) sum += +size?.price;
+    selectedExtras!?.length > 0 &&
+      selectedExtras?.forEach((extra) => (sum = +sum + +extra.price));
+
+    setTotalPrice(sum);
+  }, [size, selectedExtras, extras, sizes, price]);
 
   return (
     <div
@@ -45,12 +68,19 @@ export default function AddToCartModal({
           <h5>Pick your size</h5>
           <div className="grid grid-cols-1 gap-y-2">
             {sizes!?.length > 0 &&
-              sizes!.map((size) => (
+              sizes!.map((size, index) => (
                 <label
                   key={size.id}
                   className="border flex gap-x-2 p-4 hover:bg-gray-50 cursor-pointer"
                 >
-                  <input type="radio" name="size" />
+                  <input
+                    type="radio"
+                    name={"size" + menuItem._id}
+                    onChange={() => {
+                      setError("");
+                      setSize(size);
+                    }}
+                  />
                   <span>
                     {size.name} ${size.price}
                   </span>
@@ -68,7 +98,17 @@ export default function AddToCartModal({
                   key={extra.id}
                   className="border flex gap-x-2 p-4 hover:bg-gray-50 cursor-pointer"
                 >
-                  <input type="checkbox" name="extra" />
+                  <input
+                    type="checkbox"
+                    name="extra"
+                    onChange={(e) => {
+                      e.target.checked
+                        ? setSelectedExtras((prev) => [...prev, extra])
+                        : setSelectedExtras((prev) =>
+                            prev.filter((ex) => ex.id !== extra.id)
+                          );
+                    }}
+                  />
                   <span>
                     {extra.name} ${extra.price}
                   </span>
@@ -76,7 +116,29 @@ export default function AddToCartModal({
               ))}
           </div>
         </div>
-        <OvalButton className="bg-redColor text-lg justify-center" type="button">Add to cart</OvalButton>
+        <span className="text-red-500">{error}</span>
+        <OvalButton
+          className="bg-redColor text-lg justify-center"
+          type="button"
+          onClick={() => {
+            if (!size) {
+              setError("Please select size!");
+              return false;
+            }
+            addToCart({
+              _id,
+              description,
+              image,
+              name,
+              count: 1,
+              extras: selectedExtras,
+              size,
+              price: totalPrice,
+            });
+          }}
+        >
+          Add to cart (${totalPrice})
+        </OvalButton>
       </div>
     </div>
   );

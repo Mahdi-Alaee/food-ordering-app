@@ -9,7 +9,7 @@ export interface MenuItem {
   _id?: string;
   name?: string;
   description?: string;
-  price?: string;
+  price?: number;
   image?: string;
   sizes?: MenuItemSizeOrExtra[];
   extras?: MenuItemSizeOrExtra[];
@@ -19,7 +19,7 @@ export interface MenuItem {
 export interface MenuItemSizeOrExtra {
   id: string;
   name: string;
-  price: string;
+  price: number;
 }
 
 export type State =
@@ -29,10 +29,17 @@ export type State =
   | "image loading"
   | "redirecting";
 
-export interface Cart extends MenuItem {
+export interface Cart {
+  _id?: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  image?: string;
+  size?: MenuItemSizeOrExtra;
+  extras?: MenuItemSizeOrExtra[];
   count: number;
 }
 
 export interface IconProps {
-  className?: string
+  className?: string;
 }
