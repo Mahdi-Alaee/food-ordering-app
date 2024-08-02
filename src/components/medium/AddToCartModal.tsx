@@ -135,6 +135,7 @@ export default function AddToCartModal({
               size,
               price: totalPrice,
             });
+            setIsOpen(false);
           }}
         >
           Add to cart (${totalPrice})

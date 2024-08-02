@@ -5,9 +5,13 @@ import NavBar from "../medium/NavBar";
 import { SlBasket } from "react-icons/sl";
 import OvalButton from "../small/OvalButton";
 import { signOut, useSession } from "next-auth/react";
+import { useContext } from "react";
+import { AppContext, AppContextType } from "@/Context/app";
 
 export default function Header() {
   const { data: session } = useSession();
+  const { cart } = useContext(AppContext) as AppContextType;
+
   return (
     <header className="flex justify-between">
       {/* left side */}
@@ -53,8 +57,9 @@ export default function Header() {
         )}
 
         {/* basket */}
-        <Link href="/cart" className="text-2xl">
+        <Link href="/cart" className="text-2xl relative">
           <SlBasket />
+          <span className="absolute -top-1 -right-2 bg-redColor text-white text-sm w-4 h-4 rounded-full flex justify-center items-center" style={{lineHeight: 0}}>{cart.length}</span>
         </Link>
       </div>
     </header>
