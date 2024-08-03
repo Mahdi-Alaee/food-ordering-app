@@ -7,21 +7,30 @@ import { options } from "../auth/[...nextauth]/options";
 export async function PUT(req: Request) {
   const body = await req.json();
   let res;
+  const { name, phone, street, postalCode, city, country } = body;
 
   mongoose.connect(process.env.MONGO_URL!);
   const user = (await UserModel.findOne({ email: body.email })) as UserData;
-  const name = body.newName || user?.name;
-  // const image = body.image || user?.image;
-  const phone = body.phone || user?.phone;
-  const street = body.street || user?.street;
-  const postalCode = body.postalCode || user?.postalCode;
-  const city = body.city || user?.city;
-  const country = body.country || user?.country;
+  // const name = body.newName;
+  // const phone = body.phone;
+  // const street = body.street;
+  // const postalCode = body.postalCode;
+  // const city = body.city;
+  // const country = body.country;
   const image = body.image || user?.image;
   if (user)
     res = await UserModel.updateOne(
       { email: body.email },
-      { name, phone, street, postalCode, city, country, image,isAdmin:user.isAdmin }
+      {
+        name,
+        phone,
+        street,
+        postalCode,
+        city,
+        country,
+        image,
+        isAdmin: user.isAdmin,
+      }
     );
 
   return Response.json(res);

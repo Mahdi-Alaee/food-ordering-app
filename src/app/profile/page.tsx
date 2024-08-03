@@ -50,6 +50,11 @@ export default function Profile() {
     }
   }, [state]);
 
+  useEffect(() => {
+    console.log({phone});
+    
+  }, [phone]);
+
   if (isLoading) {
     return "Loading ...";
   } else if (user === null) {

@@ -1,3 +1,5 @@
+"use client";
+
 import { Cart } from "@/types/small-types";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -59,11 +61,15 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         }
       });
       if (isHeigherThanOne) {
-        return prev.map((item) =>
+        const newCart = prev.map((item) =>
           item._id === itemId ? { ...item, count: item.count - 1 } : item
         );
+        setCartToLocalStorage(newCart);
+        return newCart;
       } else {
-        return prev.filter((item) => item._id !== itemId);
+        const newCart = prev.filter((item) => item._id !== itemId);
+        setCartToLocalStorage(newCart);
+        return newCart;
       }
     });
   };
