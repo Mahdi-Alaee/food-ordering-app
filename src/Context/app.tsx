@@ -2,6 +2,7 @@
 
 import { Cart } from "@/types/small-types";
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export interface AppContextType {
   cart: Cart[];
@@ -28,19 +29,15 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     localStorage.setItem("cart", JSON.stringify(cartData));
 
   const addToCart = (newItem: Cart) => {
-    console.log({ newItem });
-
     const isExists = cart.find((item) => item._id === newItem._id);
     console.log({ isExists });
-    if (!isExists)
+    if (!isExists) {
       setCart((prev) => {
         const newCart = [...prev, newItem];
         setCartToLocalStorage(newCart);
         return newCart;
       });
-    else {
-      console.log("in else");
-
+    } else {
       setCart((prev) => {
         const newCart = prev.map((item) =>
           item._id === newItem._id ? { ...item, count: item.count + 1 } : item
@@ -49,11 +46,13 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         return newCart;
       });
     }
+    toast.success("Added successfully :)");
   };
 
   const removeFromCart = (itemId: string) => {
+    let isHeigherThanOne = false;
     setCart((prev) => {
-      const isHeigherThanOne = prev.some((item) => {
+      isHeigherThanOne = prev.some((item) => {
         console.log("loop");
 
         if (item._id === itemId && item.count > 1) {
@@ -72,6 +71,9 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         return newCart;
       }
     });
+    toast.success(
+      `${isHeigherThanOne ? "Decreased" : "Removed"} successfully :)`
+    );
   };
 
   return (

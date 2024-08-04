@@ -3,6 +3,7 @@
 import FoodBox from "@/components/small/FoodBox";
 import { Category, MenuItem } from "@/types/small-types";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -34,7 +35,9 @@ export default function Menu() {
     <main className="mb-16 pt-20">
       {categories.map((cat) => (
         <div key={cat._id}>
-          <h2 className="text-5xl text-redColor mb-10 font-bold text-center">{cat.name}</h2>
+          <h2 className="text-5xl text-redColor mb-10 font-bold text-center">
+            {cat.name}
+          </h2>
           <div className="grid grid-cols-3 gap-4 mb-16">
             {menuItems.map((item) => {
               if (item.category === cat._id)
@@ -43,6 +46,7 @@ export default function Menu() {
           </div>
         </div>
       ))}
+      <ToastContainer />
     </main>
   );
 }

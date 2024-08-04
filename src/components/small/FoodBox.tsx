@@ -14,6 +14,8 @@ export default function FoodBox(props: MenuItem) {
     props;
   const [isOpenModal, setIsOpenModal] = useState(false);
 
+  const hasSizeOrExtra = sizes!.length > 0 || extras!.length > 0;
+
   return (
     <div className="bg-gray-200 p-6 flex flex-col items-center justify-between gap-y-2 shadow-lg rounded-md hover:bg-white">
       {/* image */}
@@ -35,17 +37,22 @@ export default function FoodBox(props: MenuItem) {
         <OvalButton
           className="bg-redColor flex-wrap justify-center"
           onClick={() => {
-            if (sizes!.length > 0 && extras!.length > 0) setIsOpenModal(true);
+            if (hasSizeOrExtra) setIsOpenModal(true);
             else addToCart({ ...props, count: 1 });
           }}
           type="button"
         >
           <span>
-            Add to cart <span>${price}</span>
+            Add to cart{" "}
+            <span>{hasSizeOrExtra ? "from($" + price + ")" : "$" + price}</span>
           </span>
         </OvalButton>
       </div>
-      <AddToCartModal menuItem={props} isOpen={isOpenModal} setIsOpen={setIsOpenModal} />
+      <AddToCartModal
+        menuItem={props}
+        isOpen={isOpenModal}
+        setIsOpen={setIsOpenModal}
+      />
     </div>
   );
 }

@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 export default function Cart() {
   const { cart } = useContext(AppContext) as AppContextType;
   const [subTotal, setSubTotal] = useState<number>();
+  const [deliveryFee, setDeliveryFee] = useState<number>(5);
+  const [total, setTotal] = useState<number>();
   const { user } = useProfile();
   const router = useRouter();
 
@@ -22,10 +24,11 @@ export default function Cart() {
   const calcSubTotal = () => {
     let sum = 0;
     cart.forEach((item) => {
-      sum += +item.price!;
+      sum += +item.price! * +item.count;
     });
 
     setSubTotal(sum);
+    setTotal(sum + deliveryFee);
   };
 
   return (
@@ -37,7 +40,9 @@ export default function Cart() {
       {/* content */}
       <div>
         <CartItems cart={cart} />
-
+        <p>Sub total: {subTotal}</p>
+        <p>Delivery fee: {deliveryFee}</p>
+        <p className="text-center text-lg">Total: {total}</p>
         <OvalButton
           onClick={() => {
             if (
@@ -57,10 +62,10 @@ export default function Cart() {
           type="button"
           className="bg-redColor mx-auto mt-12 scale-150"
         >
-          Pay ${subTotal}
+          Continue to pay
         </OvalButton>
       </div>
-      <ToastContainer position="top-center"  />
+      <ToastContainer position="top-center" />
     </main>
   );
 }
