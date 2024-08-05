@@ -15,7 +15,7 @@ export default function Cart() {
   const [deliveryFee, setDeliveryFee] = useState<number>(5);
   const [total, setTotal] = useState<number>();
   const { user } = useProfile();
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
     calcSubTotal();
