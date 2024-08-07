@@ -8,6 +8,7 @@ import OvalButton from "@/components/small/OvalButton";
 import useProfile from "@/hooks/useProfile";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { UserData } from "@/types/session";
 
 export default function Cart() {
   const { cart } = useContext(AppContext) as AppContextType;
@@ -15,7 +16,7 @@ export default function Cart() {
   const [deliveryFee, setDeliveryFee] = useState<number>(5);
   const [total, setTotal] = useState<number>();
   const { user } = useProfile();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     calcSubTotal();
@@ -44,14 +45,26 @@ export default function Cart() {
         <p>Delivery fee: {deliveryFee}</p>
         <p className="text-center text-lg">Total: {total}</p>
         <OvalButton
-          onClick={() => {
-            if (
-              user?.phone &&
-              user.city &&
-              user.country &&
-              user.postalCode &&
-              user.street
-            ) {
+          onClick={async () => {
+            const { phone, city, country, postalCode, street } =
+              user as UserData;
+            if (phone && city && country && postalCode && street) {
+              console.log({
+                cart,
+                address: { phone, city, country, postalCode, street },
+              });
+
+              const res = await fetch("/api/checkout", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  cart,
+                  address: { phone, city, country, postalCode, street },
+                }),
+              });
+              console.log({ res, data: await res.json() });
             } else {
               toast.info("Complete your profile info (address)");
               setTimeout(() => {
