@@ -46,6 +46,8 @@ export default function Cart() {
         <p className="text-center text-lg">Total: {total}</p>
         <OvalButton
           onClick={async () => {
+            console.log(user);
+            
             const { phone, city, country, postalCode, street } =
               user as UserData;
             if (phone && city && country && postalCode && street) {

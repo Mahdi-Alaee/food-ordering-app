@@ -11,4 +11,4 @@ const OrderSchema = new Schema({
   paid: { type: Boolean, default: false },
 });
 
-export const OrderModel = models?.OrderModel || model("OrderModel",OrderSchema);
+export const OrderModel = models?.Order || model("Order",OrderSchema);

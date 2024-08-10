@@ -3,26 +3,34 @@ import { UserData } from "@/types/session";
 import { Cart } from "@/types/small-types";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
-import Stripe from "stripe";
+// import Stripe from "stripe";
 import { options } from "../auth/[...nextauth]/options";
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
   mongoose.connect(process.env.MONGO_URL!);
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  console.log(process.env.STRIPE_SECRET_KEY);
+
+  // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   const { cart, address } = await req.json();
 
-  const session = await getServerSession(options);  
+  const session = await getServerSession(options);
   const user = session?.user as UserData;
 
-  await OrderModel.create({
+  const res = await OrderModel.create({
     email: user.email,
     ...address,
     cartProducts: cart,
     paid: false,
   });
 
-  const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+  console.log({res});
+  
+
+  const line_items
+  // : Stripe.Checkout.SessionCreateParams.LineItem[] 
+  = [];
 
   for (const product of cart as Cart[]) {
     line_items.push({
@@ -39,7 +47,7 @@ export async function POST(req: Request) {
     });
   }
   console.log({line_items});
-  
+
   const stripeSession = await stripe.checkout.sessions.create(
     {
       line_items,
@@ -57,8 +65,8 @@ export async function POST(req: Request) {
           },
         },
       ],
-    },
-    {stripeAccount:process.env.STRIPE_SECRET_KEY}
+    }
+    // {stripeAccount:process.env.STRIPE_SECRET_KEY}
   );
   return Response.json(stripeSession.url);
 }
