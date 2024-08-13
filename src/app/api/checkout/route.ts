@@ -25,12 +25,11 @@ export async function POST(req: Request) {
     paid: false,
   });
 
-  console.log({res});
-  
+  console.log({ res });
 
-  const line_items
-  // : Stripe.Checkout.SessionCreateParams.LineItem[] 
-  = [];
+  const line_items =
+    // : Stripe.Checkout.SessionCreateParams.LineItem[]
+    [];
 
   for (const product of cart as Cart[]) {
     line_items.push({
@@ -46,7 +45,7 @@ export async function POST(req: Request) {
       },
     });
   }
-  console.log({line_items});
+  console.log({ line_items });
 
   const stripeSession = await stripe.checkout.sessions.create(
     {
