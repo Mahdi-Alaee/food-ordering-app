@@ -9,8 +9,11 @@ import useProfile from "@/hooks/useProfile";
 import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/types/session";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import { Cart } from "@/types/small-types";
 
-export default function Cart() {
+export default function CartPage() {
   const { cart } = useContext(AppContext) as AppContextType;
   const [subTotal, setSubTotal] = useState<number>();
   const [deliveryFee, setDeliveryFee] = useState<number>(5);
@@ -32,6 +35,59 @@ export default function Cart() {
     setTotal(sum + deliveryFee);
   };
 
+  const handleSubmit = async () => {
+    console.log(user);
+
+    const { phone, city, country, postalCode, street } = user as UserData;
+    if (phone && city && country && postalCode && street) {
+      console.log({
+        cart,
+        address: { phone, city, country, postalCode, street },
+      });
+
+      const dialogResult = await withReactContent(Swal).fire({
+        title: "Would you like to pay?",
+        confirmButtonText: "Yes",
+        denyButtonText: "No!",
+        showDenyButton: true,
+      });
+      console.log(dialogResult);
+
+      const Checkout = new Promise(async (resolve, reject) => {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cart,
+            address: { phone, city, country, postalCode, street },
+            paid: Boolean(dialogResult?.value),
+          }),
+        });
+        if (res.ok) {
+          resolve(res);
+          const data = (await res.json()) as Cart;
+          setTimeout(() => {
+            router.push("/orders/" + data._id);
+          }, 2000);
+        } else {
+          reject();
+        }
+      });
+      toast.promise(Checkout, {
+        success: "redirecting ...",
+        pending: "loading ...",
+        error: "An error has occured!",
+      });
+    } else {
+      toast.info("Complete your profile info (address)");
+      setTimeout(() => {
+        router.push("/profile");
+      }, 3000);
+    }
+  };
+
   return (
     <main className="mb-16">
       {/* title */}
@@ -45,39 +101,11 @@ export default function Cart() {
         <p>Delivery fee: {deliveryFee}</p>
         <p className="text-center text-lg">Total: {total}</p>
         <OvalButton
-          onClick={async () => {
-            console.log(user);
-            
-            const { phone, city, country, postalCode, street } =
-              user as UserData;
-            if (phone && city && country && postalCode && street) {
-              console.log({
-                cart,
-                address: { phone, city, country, postalCode, street },
-              });
-
-              const res = await fetch("/api/checkout", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  cart,
-                  address: { phone, city, country, postalCode, street },
-                }),
-              });
-              console.log({ res, data: await res.json() });
-            } else {
-              toast.info("Complete your profile info (address)");
-              setTimeout(() => {
-                router.push("/profile");
-              }, 3000);
-            }
-          }}
+          onClick={handleSubmit}
           type="button"
           className="bg-redColor mx-auto mt-12 scale-150"
         >
-          Continue to pay
+          Submit
         </OvalButton>
       </div>
       <ToastContainer position="top-center" />

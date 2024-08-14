@@ -1,6 +1,6 @@
 import { UserModel } from "@/Models/User";
 import mongoose from "mongoose";
-import { AuthOptions } from "next-auth";
+import { AuthOptions, getServerSession, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
@@ -8,6 +8,7 @@ import Github from "next-auth/providers/github";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/lib/db";
 import { Adapter } from "next-auth/adapters";
+import { UserData } from "@/types/session";
 
 export const options: AuthOptions = {
   adapter: MongoDBAdapter(clientPromise) as Adapter,
@@ -26,7 +27,7 @@ export const options: AuthOptions = {
         try {
           mongoose.connect(process.env.MONGO_URL!);
           const user = await UserModel.findOne({ email: credentials?.email });
-          
+
           if (bcrypt.compareSync(credentials?.password!, user.password)) {
             console.log({ user });
             console.log("logged in!");
@@ -75,3 +76,16 @@ export const options: AuthOptions = {
     signOut: "/logout",
   },
 };
+
+export async function isAdmin() {
+  const session = await getServerSession(options);
+  if (!session) {
+    return false;
+  }
+  mongoose.connect(process.env.MONGO_URL!);
+  const user = (await UserModel.findOne({
+    email: session.user?.email,
+  })) as UserData;
+
+  return Boolean(user?.isAdmin);
+}
