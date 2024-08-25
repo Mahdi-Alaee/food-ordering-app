@@ -7,7 +7,7 @@ import { options } from "../auth/[...nextauth]/options";
 export async function PUT(req: Request) {
   const body = await req.json();
   let res;
-  const { name, phone, street, postalCode, city, country } = body;
+  const { newName, phone, street, postalCode, city, country } = body;
 
   mongoose.connect(process.env.MONGO_URL!);
   const user = (await UserModel.findOne({ email: body.email })) as UserData;
@@ -22,7 +22,7 @@ export async function PUT(req: Request) {
     res = await UserModel.updateOne(
       { email: body.email },
       {
-        name,
+        name: newName,
         phone,
         street,
         postalCode,

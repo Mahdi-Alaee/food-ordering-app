@@ -1,7 +1,9 @@
 "use client";
 
+import AddressForm from "@/components/medium/AddressForm";
 import CartItems from "@/components/medium/CartItems";
 import SectionHeader from "@/components/small/SectionHeader";
+import useProfile from "@/hooks/useProfile";
 import { OrderType } from "@/types/small-types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,6 +15,7 @@ export default function Order() {
   const [total, setTotal] = useState<number>();
   const { id } = useParams();
   const [order, setOrder] = useState<OrderType>();
+  const { user, isLoading } = useProfile();
 
   useEffect(() => {
     (async () => {
@@ -30,8 +33,10 @@ export default function Order() {
     let sum = 0;
     orderData?.cartProducts.forEach((item) => (sum += +item.price!));
     setSubTotal(sum);
-    setTotal(sum + deliveryFee)
+    setTotal(sum + deliveryFee);
   };
+
+  if (isLoading) return "Loading ....";
 
   return (
     <main className="mb-16">
@@ -41,13 +46,20 @@ export default function Order() {
         <h2 className="text-2xl text-center">Thank you for your purchase ❤</h2>
       </div>
       {/* content */}
-      <div>
-        {order?.cartProducts && (
-          <CartItems cart={order?.cartProducts!} noButtons={true} />
-        )}
-        <p>Sub total: {subTotal}</p>
-        <p>Delivery fee: {deliveryFee}</p>
-        <p className="text-center text-lg">Total: {total}</p>
+      <div className="grid grid-cols-2 gap-x-4 mt-12">
+        {/* left */}
+        <div>
+          {order?.cartProducts && (
+            <CartItems cart={order?.cartProducts!} noButtons={true} />
+          )}
+          <p>Sub total: {subTotal}</p>
+          <p>Delivery fee: {deliveryFee}</p>
+          <p className="text-center text-lg">Total: {total}</p>
+        </div>
+        {/* right */}
+        <div className="bg-gray-100 p-4 rounded-xl">
+          <AddressForm allDisable user={user!} />
+        </div>
       </div>
       <ToastContainer position="top-center" />
     </main>

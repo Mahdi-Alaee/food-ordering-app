@@ -55,3 +55,12 @@ export interface OrderType {
 export interface IconProps {
   className?: string;
 }
+
+export interface AddressFormData {
+  newName: string;
+  phone: string;
+  street: string;
+  postalCode: string;
+  city: string;
+  country: string;
+}

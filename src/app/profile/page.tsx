@@ -1,16 +1,17 @@
 "use client";
 
+import AddressForm from "@/components/medium/AddressForm";
 import UserTabs from "@/components/medium/UserTabs";
 import ImageUploader from "@/components/small/ImageUploader";
 import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
+import { AddressFormData } from "@/types/small-types";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Profile() {
-  const [newName, setNewName] = useState("");
   const [state, setState] = useState<
     | "image uploaded"
     | "image upload failed"
@@ -19,22 +20,11 @@ export default function Profile() {
     | ""
   >("");
   const [userImage, setUserImage] = useState("");
-  const [phone, setPhone] = useState("");
-  const [street, setStreet] = useState("");
-  const [postalCode, setPostalCode] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-
+  const [formData, setFormData] = useState<AddressFormData>();
   const { isLoading, user } = useProfile();
 
   useEffect(() => {
-    setNewName(user?.name || "");
     setUserImage(user?.image || "");
-    setPhone(user?.phone || "");
-    setStreet(user?.street || "");
-    setPostalCode(user?.postalCode || "");
-    setCity(user?.city || "");
-    setCountry(user?.country || "");
   }, [user]);
 
   useEffect(() => {
@@ -50,11 +40,6 @@ export default function Profile() {
     }
   }, [state]);
 
-  useEffect(() => {
-    console.log({phone});
-    
-  }, [phone]);
-
   if (isLoading) {
     return "Loading ...";
   } else if (user === null) {
@@ -63,6 +48,10 @@ export default function Profile() {
 
   const onEditProfile = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { newName, phone, street, postalCode, city, country } = formData!;
+
+    console.log({ newName, phone, street, postalCode, city, country });
+
     toast.promise(
       fetch("/api/profile", {
         method: "PUT",
@@ -125,68 +114,13 @@ export default function Profile() {
           />
         </div>
         {/* right */}
-        <form className="flex flex-col w-full gap-y-2" onSubmit={onEditProfile}>
-          {/* first and last name */}
-          <TextBox
-            label="first name and last name:"
-            placeholder="Enter your First and last name ..."
-            onChange={(e) => setNewName(e.target.value)}
-            value={newName}
-          />
-          {/* email */}
-          <TextBox
-            label="Email:"
-            placeholder="Enter your email ..."
-            value={user?.email!}
-            disabled
-          />
-          {/* phone */}
-          <TextBox
-            label="Phone:"
-            placeholder="Enter your phone number ..."
-            onChange={(e) => setPhone(e.target.value)}
-            value={phone}
-          />
-          {/* street */}
-          <TextBox
-            label="Street address:"
-            onChange={(e) => setStreet(e.target.value)}
-            placeholder="Enter your street address ..."
-            value={street}
-          />
-          <div className="grid grid-cols-2 gap-x-4">
-            {/* postal code */}
-            <TextBox
-              label="Postal code:"
-              onChange={(e) => setPostalCode(e.target.value)}
-              placeholder="Enter postal code ..."
-              value={postalCode}
-            />
-
-            {/* city */}
-            <TextBox
-              label="City:"
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="Enter your city ..."
-              value={city}
-            />
-          </div>
-          {/* country */}
-          <TextBox
-            label="Country:"
-            onChange={(e) => setCountry(e.target.value)}
-            placeholder="Enter your country..."
-            value={country}
-          />
-          {/* submit */}
-          <button
-            className="p-2 rounded-xl bg-redColor text-white disabled:opacity-70"
-            type="submit"
-            disabled={state !== ""}
-          >
-            Save
-          </button>
-        </form>
+        <AddressForm
+          formData={formData!}
+          onEditProfile={onEditProfile}
+          setFormData={setFormData}
+          state={state}
+          user={user}
+        />
       </div>
       <ToastContainer />
     </main>
