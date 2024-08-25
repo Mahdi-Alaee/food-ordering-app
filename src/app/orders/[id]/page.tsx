@@ -2,8 +2,7 @@
 
 import CartItems from "@/components/medium/CartItems";
 import SectionHeader from "@/components/small/SectionHeader";
-import { AppContextType } from "@/Context/app";
-import { Cart } from "@/types/small-types";
+import { OrderType } from "@/types/small-types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
@@ -13,9 +12,7 @@ export default function Order() {
   const [deliveryFee, setDeliveryFee] = useState<number>(5);
   const [total, setTotal] = useState<number>();
   const { id } = useParams();
-  const [order, setOrder] = useState<Cart>()
-
-  order.
+  const [order, setOrder] = useState<OrderType>();
 
   useEffect(() => {
     (async () => {
@@ -23,7 +20,7 @@ export default function Order() {
 
       const res = await fetch("/api/order?_id=" + id);
       const data = await res.json();
-      console.log({ data });
+      setOrder(data);
     })();
   }, []);
 
@@ -36,7 +33,9 @@ export default function Order() {
       </div>
       {/* content */}
       <div>
-        {/* <CartItems cart={cart} /> */}
+        {order?.cartProducts && (
+          <CartItems cart={order?.cartProducts!} noButtons={true} />
+        )}
         <p>Sub total: {subTotal}</p>
         <p>Delivery fee: {deliveryFee}</p>
         <p className="text-center text-lg">Total: {total}</p>

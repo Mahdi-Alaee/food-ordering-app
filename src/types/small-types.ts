@@ -40,6 +40,18 @@ export interface Cart {
   count: number;
 }
 
+export interface OrderType {
+  _id: string;
+  email: string;
+  phone: string;
+  street: string;
+  postalCode: string;
+  city: string;
+  country: string;
+  cartProducts: Cart[];
+  paid: boolean;
+}
+
 export interface IconProps {
   className?: string;
 }

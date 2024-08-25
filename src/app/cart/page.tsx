@@ -1,7 +1,7 @@
 "use client";
 
 import SectionHeader from "@/components/small/SectionHeader";
-import CartItems from "./components/CartItems";
+import CartItems from "@/components/medium/CartItems";
 import { useContext, useEffect, useState } from "react";
 import { AppContext, AppContextType } from "@/Context/app";
 import OvalButton from "@/components/small/OvalButton";
