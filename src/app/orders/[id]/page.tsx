@@ -21,8 +21,17 @@ export default function Order() {
       const res = await fetch("/api/order?_id=" + id);
       const data = await res.json();
       setOrder(data);
+
+      calcTotal(data);
     })();
   }, []);
+
+  const calcTotal = (orderData: OrderType) => {
+    let sum = 0;
+    orderData?.cartProducts.forEach((item) => (sum += +item.price!));
+    setSubTotal(sum);
+    setTotal(sum + deliveryFee)
+  };
 
   return (
     <main className="mb-16">
