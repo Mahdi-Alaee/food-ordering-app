@@ -30,31 +30,33 @@ export default function MenuItemForm({
 }: MenuItemFormProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState<string | number>('');
   const [isSizesOpen, setIsSizesOpen] = useState(false);
   const [isExtrasOpen, setIsExtrasOpen] = useState(false);
   const [sizes, setSizes] = useState<MenuItemSizeOrExtra[]>([]);
   const [extras, setExtras] = useState<MenuItemSizeOrExtra[]>([]);
   const [sizeName, setSizeName] = useState("");
-  const [sizePrice, setSizePrice] = useState("");
+  const [sizePrice, setSizePrice] = useState<string | number>("");
   const [extraName, setExtraName] = useState("");
-  const [extraPrice, setExtraPrice] = useState("");
+  const [extraPrice, setExtraPrice] = useState<string | number>("");
   const [category, setCategory] = useState<string>("f");
 
   useEffect(() => {
     setName(menuItem?.name || "");
     setDescription(menuItem?.description || "");
-    setPrice(menuItem?.price || "");
+    setPrice(menuItem?.price || '');
     setSizes(menuItem?.sizes || []);
     setExtras(menuItem?.extras || []);
     setCategory(menuItem?.category || "");
   }, []);
 
   const onAddSize = () => {
-    setSizes((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), name: sizeName, price: sizePrice },
-    ]);
+    setSizes((prev:MenuItemSizeOrExtra[]) => {
+      return [
+        ...prev,
+        { id: crypto.randomUUID(), name: sizeName, price: sizePrice as number },
+      ]
+    });
     setSizeName("");
     setSizePrice("");
   };
@@ -64,10 +66,12 @@ export default function MenuItemForm({
   };
 
   const onAddExtra = () => {
-    setExtras((prev) => [
+    setExtras((prev:MenuItemSizeOrExtra[]) => {
+      return [
       ...prev,
-      { id: crypto.randomUUID(), name: extraName, price: extraPrice },
-    ]);
+      { id: crypto.randomUUID(), name: extraName, price: extraPrice as number },
+    ]
+  });
     setExtraName("");
     setExtraPrice("");
   };
@@ -88,7 +92,7 @@ export default function MenuItemForm({
           sizes,
           extras,
           category,
-        };
+        } as MenuItem;
 
         onSubmit(data);
       }}
@@ -130,7 +134,7 @@ export default function MenuItemForm({
         label="Base price:"
         placeholder="Enter item's price number ..."
         onChange={(e) => setPrice(e.target.value)}
-        value={price}
+        value={price!}
       />
 
       {/* sizes */}
