@@ -46,7 +46,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         return newCart;
       });
     }
-    toast.success("Added successfully :)");
+    toast.info("Added :)");
   };
 
   const removeFromCart = (itemId: string) => {
@@ -71,8 +71,8 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         return newCart;
       }
     });
-    toast.success(
-      `${isHeigherThanOne ? "Decreased" : "Removed"} successfully :)`
+    toast.info(
+      `${isHeigherThanOne ? "Decreased" : "Removed"} :)`
     );
   };
 

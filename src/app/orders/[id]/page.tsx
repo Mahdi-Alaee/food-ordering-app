@@ -2,11 +2,13 @@
 
 import AddressForm from "@/components/medium/AddressForm";
 import CartItems from "@/components/medium/CartItems";
+import OvalButton from "@/components/small/OvalButton";
 import SectionHeader from "@/components/small/SectionHeader";
 import useProfile from "@/hooks/useProfile";
 import { OrderType } from "@/types/small-types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { HiHome } from "react-icons/hi";
 import { ToastContainer } from "react-toastify";
 
 export default function Order() {
@@ -61,6 +63,10 @@ export default function Order() {
           <AddressForm allDisable user={user!} />
         </div>
       </div>
+        <OvalButton className="bg-redColor mx-auto w-max mt-6 text-xl flex items-center" href="/">
+          <HiHome className="text-2xl" />
+          Go Home
+        </OvalButton>
       <ToastContainer position="top-center" />
     </main>
   );
