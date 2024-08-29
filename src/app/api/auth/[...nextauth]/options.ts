@@ -16,21 +16,28 @@ export const options: AuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "email" },
+        email: { label: "email", type: "email", placeholder: "email" },
         password: {
-          label: "Password",
+          label: "password",
           type: "password",
           placeholder: "password",
         },
       },
       authorize: async (credentials) => {
         try {
+          console.log({ credentials });
+
           mongoose.connect(process.env.MONGO_URL!);
           const user = await UserModel.findOne({ email: credentials?.email });
+
+          console.log(
+            bcrypt.compareSync(credentials?.password!, user.password)
+          );
 
           if (bcrypt.compareSync(credentials?.password!, user.password)) {
             console.log({ user });
             console.log("logged in!");
+
             return user;
           }
           return null;
