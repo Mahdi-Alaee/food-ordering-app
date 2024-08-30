@@ -50,6 +50,8 @@ export interface OrderType {
   country: string;
   cartProducts: Cart[];
   paid: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IconProps {
