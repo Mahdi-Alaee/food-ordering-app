@@ -1,7 +1,10 @@
 import { CategoryModel } from "@/Models/Category";
 import mongoose from "mongoose";
+import { isAdmin } from "../auth/[...nextauth]/options";
 
 export async function POST(req: Request) {
+  if (!(await isAdmin())) return Response.json("You are not an admin");
+
   const body = await req.json();
   mongoose.connect(process.env.MONGO_URL!);
   const res = await CategoryModel.create(body);
@@ -14,6 +17,8 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  if (!(await isAdmin())) return Response.json("You are not an admin");
+
   const { _id, name } = await req.json();
   mongoose.connect(process.env.MONGO_URL!);
 
@@ -34,6 +39,8 @@ export async function GET() {
 }
 
 export async function DELETE(req: Request) {
+  if (!(await isAdmin())) return Response.json("You are not an admin");
+
   const url = new URL(req.url);
   const _id = url.searchParams.get("_id");
   mongoose.connect(process.env.MONGO_URL!);
