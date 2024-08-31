@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NavBar() {
   return (
-    <nav className="flex gap-x-8">
+    <nav className="hidden md:flex gap-x-8">
       <Link href="/">Home</Link>
       <Link href="/menu">Menu</Link>
       <Link href="/#about">About</Link>

@@ -35,7 +35,7 @@ export default function Hero() {
         </div>
       </div>
       {/* right */}
-      <div className="w-5/12">
+      <div className="w-5/12 hidden md:block">
         <Image
           src="/images/pizza.png"
           alt="pizza png"
