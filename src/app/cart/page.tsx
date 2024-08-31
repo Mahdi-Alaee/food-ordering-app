@@ -7,7 +7,7 @@ import { AppContext, AppContextType } from "@/Context/app";
 import OvalButton from "@/components/small/OvalButton";
 import useProfile from "@/hooks/useProfile";
 import { toast, ToastContainer } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { UserData } from "@/types/session";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
@@ -36,7 +36,10 @@ export default function CartPage() {
   };
 
   const handleSubmit = async () => {
-    console.log(user);
+    if(!user){
+      router.push('/login')
+      return false
+    }
 
     const { phone, city, country, postalCode, street } = user as UserData;
     if (phone && city && country && postalCode && street) {
