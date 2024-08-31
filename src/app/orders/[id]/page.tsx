@@ -17,7 +17,8 @@ export default function Order() {
   const [total, setTotal] = useState<number>();
   const { id } = useParams();
   const [order, setOrder] = useState<OrderType>();
-  const { user, isLoading } = useProfile();
+  const { user, isLoading: loadingUser } = useProfile();
+  const [loadingOrder,setLoadingOrders] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -26,7 +27,7 @@ export default function Order() {
       const res = await fetch("/api/order?_id=" + id);
       const data = await res.json();
       setOrder(data);
-
+      setLoadingOrders(false)
       calcTotal(data);
     })();
   }, []);
@@ -38,7 +39,7 @@ export default function Order() {
     setTotal(sum + deliveryFee);
   };
 
-  if (isLoading) return "Loading ....";
+  if (loadingUser || loadingOrder) return "Loading ....";
 
   return (
     <main className="mb-16">
@@ -63,10 +64,13 @@ export default function Order() {
           <AddressForm allDisable user={user!} />
         </div>
       </div>
-        <OvalButton className="bg-redColor mx-auto w-max mt-6 text-xl flex items-center" href="/">
-          <HiHome className="text-2xl" />
-          Go Home
-        </OvalButton>
+      <OvalButton
+        className="bg-redColor mx-auto w-max mt-6 text-xl flex items-center"
+        href="/"
+      >
+        <HiHome className="text-2xl" />
+        Go Home
+      </OvalButton>
       <ToastContainer position="top-center" />
     </main>
   );
