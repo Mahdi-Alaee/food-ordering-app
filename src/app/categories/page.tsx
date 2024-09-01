@@ -8,12 +8,14 @@ import { Category } from "@/types/small-types";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Loading from "../loading";
 
 export default function Categories() {
-  const { isLoading, user } = useProfile();
+  const { isLoading: loadingUser, user } = useProfile();
   const [name, setName] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | {}>({});
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +59,6 @@ export default function Categories() {
     });
 
     if ("name" in selectedCategory) {
-
       toast.promise(EditCategoryPromise, {
         pending: "Loading ...",
         success: "The category edited successfully",
@@ -77,6 +78,7 @@ export default function Categories() {
     if (res.ok) {
       const categories = await res.json();
       setCategories(categories);
+      setLoadingCategories(false);
     }
   };
 
@@ -106,8 +108,8 @@ export default function Categories() {
     });
   };
 
-  if (isLoading) {
-    return "Loading ...";
+  if (loadingUser || loadingCategories) {
+    return <Loading />;
   } else if (user === null) {
     redirect("/profile");
   } else if (!user?.isAdmin) {

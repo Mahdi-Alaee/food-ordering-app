@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/loading";
 import Left from "@/components/icons/Left";
 import MenuItemForm from "@/components/medium/MenuItemForm";
 import UserTabs from "@/components/medium/UserTabs";
@@ -17,7 +18,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function NewMenuItem() {
-  const { isLoading, user } = useProfile();
+  const { isLoading: loadingUser, user } = useProfile();
   const [state, setState] = useState<State>("");
   const [image, setImage] = useState("");
   const [menuItem, setMenuItem] = useState<MenuItem>();
@@ -25,6 +26,8 @@ export default function NewMenuItem() {
   const params = useParams();
   const id = params.id[0];
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingMenuItems, setLoadingMenuItems] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -34,6 +37,7 @@ export default function NewMenuItem() {
         const mainItem = data.find((item) => item._id === id);
         setMenuItem(mainItem);
         setImage(mainItem?.image || "");
+        setLoadingMenuItems(false);
       }
     })();
 
@@ -42,6 +46,7 @@ export default function NewMenuItem() {
       if (res.ok) {
         const data = await res.json();
         setCategories(data);
+        setLoadingCategories(false);
       }
     })();
   }, []);
@@ -114,7 +119,7 @@ export default function NewMenuItem() {
     });
   };
 
-  if (isLoading) return "Loading ...";
+  if (loadingUser || loadingCategories || loadingMenuItems) return <Loading />;
   else if (!user?.isAdmin!) redirect("/");
   else if (!menuItem) redirect("/menu-items");
   return (

@@ -6,6 +6,8 @@ import { Cart, MenuItem } from "@/types/small-types";
 import { AppContext, AppContextType } from "@/Context/app";
 import { useContext, useState } from "react";
 import AddToCartModal from "../medium/AddToCartModal";
+import { PropagateLoader } from "react-spinners";
+import Loading from "@/app/loading";
 
 export default function FoodBox(props: MenuItem) {
   const { addToCart, cart } = useContext(AppContext) as AppContextType;

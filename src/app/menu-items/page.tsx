@@ -8,10 +8,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import Loading from "../loading";
 
 export default function MenuItems() {
-  const { isLoading, user } = useProfile();
+  const { isLoading: loadingUser, user } = useProfile();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loadingMenuItems, setLoadingMenuItems] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -20,11 +22,12 @@ export default function MenuItems() {
         const data = await res.json();
 
         setMenuItems(data);
+        setLoadingMenuItems(false);
       }
     })();
   }, []);
 
-  if (isLoading) return "Loading ...";
+  if (loadingUser || loadingMenuItems) return <Loading />;
   else if (!user?.isAdmin) redirect("/");
   return (
     <main className="mb-16">
@@ -44,7 +47,9 @@ export default function MenuItems() {
         <div>
           {/* title */}
           {menuItems.length < 1 ? (
-            <p className="text-red-500 text-center mt-12">No items are avalible!</p>
+            <p className="text-red-500 text-center mt-12">
+              No items are avalible!
+            </p>
           ) : (
             <>
               <span className="text-sm">Edit category:</span>

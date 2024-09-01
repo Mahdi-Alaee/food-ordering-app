@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/loading";
 import AddressForm from "@/components/medium/AddressForm";
 import CartItems from "@/components/medium/CartItems";
 import OvalButton from "@/components/small/OvalButton";
@@ -37,7 +38,7 @@ export default function Order() {
     setTotal(sum + deliveryFee);
   };
 
-  if (loadingUser || loadingOrder) return "Loading ....";
+  if (loadingUser || loadingOrder) return <Loading />;
 
   return (
     <main className="mb-16">

@@ -10,6 +10,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Loading from "../loading";
 
 export default function Profile() {
   const [state, setState] = useState<
@@ -41,7 +42,7 @@ export default function Profile() {
   }, [state]);
 
   if (isLoading) {
-    return "Loading ...";
+    return <Loading />;
   } else if (user === null) {
     redirect("/login");
   }

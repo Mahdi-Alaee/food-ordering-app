@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/app/loading";
 import Left from "@/components/icons/Left";
 import Plus from "@/components/icons/Plus";
 import Right from "@/components/icons/Right";
@@ -23,10 +24,11 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function NewMenuItem() {
-  const { isLoading, user } = useProfile();
+  const { isLoading: loadingUser, user } = useProfile();
   const [state, setState] = useState<State>("");
   const [image, setImage] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   const router = useRouter();
 
@@ -50,6 +52,7 @@ export default function NewMenuItem() {
       const res = await fetch("/api/category");
       const data = await res.json();
       setCategories(data);
+      setLoadingCategories(false)
     })();
   }, []);
 
@@ -81,7 +84,7 @@ export default function NewMenuItem() {
     });
   };
 
-  if (isLoading) return "Loading ...";
+  if (loadingUser || loadingCategories) return <Loading />;
   else if (!user?.isAdmin!) redirect("/");
   return (
     <main className="mb-16">

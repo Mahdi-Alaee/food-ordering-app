@@ -5,11 +5,13 @@ import useProfile from "@/hooks/useProfile";
 import { OrderType } from "@/types/small-types";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Loading from "../loading";
 
 export default function Orders() {
   const { isLoading: userLoading, user } = useProfile();
   const [orders, setOrders] = useState<OrderType[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+
 
   useEffect(() => {
     (async () => {
@@ -22,7 +24,7 @@ export default function Orders() {
     })();
   }, []);
 
-  if (userLoading || ordersLoading) return "Loading...";
+  if (userLoading || ordersLoading) return <Loading />;
   return (
     <main className="mb-16">
       <UserTabs isAdmin={user?.isAdmin!} />

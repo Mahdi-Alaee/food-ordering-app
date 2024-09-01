@@ -4,10 +4,13 @@ import FoodBox from "@/components/small/FoodBox";
 import { Category, MenuItem } from "@/types/small-types";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import Loading from "../loading";
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingMenuItems, setLoadingMenuItems] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -17,6 +20,7 @@ export default function Menu() {
         const items = await res.json();
 
         setMenuItems(items);
+        setLoadingMenuItems(false);
       }
     })();
 
@@ -27,10 +31,12 @@ export default function Menu() {
         const cats = await res.json();
 
         setCategories(cats);
+        setLoadingCategories(false);
       }
     })();
   }, []);
 
+  if (loadingCategories || loadingMenuItems) return <Loading />;
   return (
     <main className="mb-16 pt-20">
       {categories.map((cat) => (

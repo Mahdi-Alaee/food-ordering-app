@@ -5,7 +5,7 @@ import OvalButton from "../small/OvalButton";
 
 export default function Hero() {
   return (
-    <section className="mb-12 md:flex md:gap-x-24">
+    <section className="mb-12 md:mb-0 md:flex md:gap-x-24">
       {/* left */}
       <div className="max-w-sm mx-auto text-center flex flex-col gap-y-6 justify-center md:w-5/12 pr-2 md:text-left">
         {/* title */}

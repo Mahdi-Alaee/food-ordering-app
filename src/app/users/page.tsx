@@ -8,10 +8,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Loading from "../loading";
 
 export default function Users() {
-  const { isLoading, user } = useProfile();
+  const { isLoading:userLoading, user } = useProfile();
   const [users, setUsers] = useState<UserData[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
     getUsers();
@@ -22,6 +24,7 @@ export default function Users() {
     if (res.ok) {
       const users = await res.json();
       setUsers(users);
+      setLoadingUsers(false)
     }
   };
 
@@ -43,8 +46,8 @@ export default function Users() {
     });
   };
 
-  if (isLoading) {
-    return "Loading ...";
+  if (userLoading || loadingUsers) {
+    return <Loading />;
   } else if (user === null) {
     redirect("/profile");
   } else if (!user?.isAdmin) {
