@@ -23,8 +23,8 @@ function CheckOut() {
 
   return (
     // foods container
-    <div className="grid grid-cols-3 gap-4 mb-16">
-      <div className="absolute left-0 right-0 -mt-48 flex justify-between -z-10">
+    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-16">
+      <div className="hidden absolute left-0 right-0 -mt-48 md:flex justify-between -z-10">
         <Image
           src="/images/sallad1.png"
           alt="sallad png"

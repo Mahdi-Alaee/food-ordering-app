@@ -38,7 +38,7 @@ export default function Menu() {
           <h2 className="text-5xl text-redColor mb-10 font-bold text-center">
             {cat.name}
           </h2>
-          <div className="grid grid-cols-3 gap-4 mb-16">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-16">
             {menuItems.map((item) => {
               if (item.category === cat._id)
                 return <FoodBox key={item._id} {...item} />;

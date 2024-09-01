@@ -36,24 +36,24 @@ export default function Orders() {
             <span className="text-red-500">No items are avalible!</span>
           ) : (
             <>
-              <span className="text-sm">Edit category:</span>
+              <span className="block text-center text-sm mb-2 sm:text-left">Edit category:</span>
               {/* items */}
               <ul className="flex flex-col gap-y-1">
                 {orders.map((order) => (
                   <li
                     key={order._id}
-                    className="flex gap-x-6 items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
+                    className="flex flex-col gap-y-3 mx-8 sm:flex-row gap-x-6 items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
                   >
                     {/* left */}
                     <div
-                      className={`w-20 text-white flex justify-center py-2 rounded-md ${
+                      className={`w-full sm:w-20 text-white flex justify-center py-2 rounded-md ${
                         order.paid ? "bg-green-700" : "bg-red-500"
                       }`}
                     >
                       {order.paid ? "Paid" : "Not paid"}
                     </div>
                     {/* center */}
-                    <div className="flex justify-between gap-x-6 grow">
+                    <div className="flex flex-col sm:flex-row justify-between gap-x-6 grow">
                       {/* content */}
                       <div>
                         {/* email */}
@@ -80,7 +80,7 @@ export default function Orders() {
                     </div>
                     {/* show link */}
                     <Link
-                      className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-gray-100"
+                      className="px-6 py-2 sm:p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
                       href={`/orders/${order._id}`}
                     >
                       Show order

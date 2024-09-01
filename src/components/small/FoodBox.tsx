@@ -17,7 +17,7 @@ export default function FoodBox(props: MenuItem) {
   const hasSizeOrExtra = sizes!.length > 0 || extras!.length > 0;
 
   return (
-    <div className="bg-gray-200 p-6 flex flex-col items-center justify-between gap-y-2 shadow-lg rounded-md hover:bg-white">
+    <div className="mx-12 sm:mx-0 bg-gray-200 p-6 flex flex-col items-center justify-between gap-y-2 shadow-lg rounded-md hover:bg-white">
       {/* image */}
       <Image
         className="w-36"

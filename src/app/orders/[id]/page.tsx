@@ -49,7 +49,7 @@ export default function Order() {
         <h2 className="text-2xl text-center">Thank you for your purchase ❤</h2>
       </div>
       {/* content */}
-      <div className="grid grid-cols-2 gap-x-4 mt-12">
+      <div className="grid sm:grid-cols-2 gap-4 mt-12">
         {/* left */}
         <div>
           {order?.cartProducts && (

@@ -17,7 +17,7 @@ interface UserTabsProps {
 export default function UserTabs({ isAdmin }: UserTabsProps) {
   return (
     <div className="flex justify-center mt-12 pb-9">
-      <div className="flex gap-x-2">
+      <div className="flex gap-2 justify-center flex-wrap">
         {tabs.map((tab) => {
           if (isAdmin) {
             return (

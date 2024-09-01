@@ -66,13 +66,13 @@ export default function Users() {
             <span className="text-red-500">No items are avalible!</span>
           ) : (
             <>
-              <span className="text-sm">Edit category:</span>
+              <span className="block text-sm mb-3 text-center sm:text-left">Edit category:</span>
               {/* items */}
               <ul className="flex flex-col gap-y-1">
                 {users.map((user) => (
                   <li
                     key={user.email}
-                    className="flex justify-between items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
+                    className="flex flex-col gap-y-3 mx-12 justify-center sm:flex-row sm:justify-between items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
                   >
                     <span>
                       {user.name || (
