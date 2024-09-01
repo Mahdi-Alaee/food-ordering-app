@@ -22,8 +22,6 @@ export default function Order() {
 
   useEffect(() => {
     (async () => {
-      console.log({ id });
-
       const res = await fetch("/api/order?_id=" + id);
       const data = await res.json();
       setOrder(data);

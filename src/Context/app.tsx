@@ -21,7 +21,6 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   useEffect(() => {
     const cartData = JSON.parse(localStorage.getItem("cart")!) as Cart[];
-    console.log({ cartData });
     setCart(cartData || []);
   }, []);
 
@@ -30,7 +29,6 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   const addToCart = (newItem: Cart) => {
     const isExists = cart.find((item) => item._id === newItem._id);
-    console.log({ isExists });
     if (!isExists) {
       setCart((prev) => {
         const newCart = [...prev, newItem];
@@ -53,8 +51,6 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     let isHeigherThanOne = false;
     setCart((prev) => {
       isHeigherThanOne = prev.some((item) => {
-        console.log("loop");
-
         if (item._id === itemId && item.count > 1) {
           return true;
         }

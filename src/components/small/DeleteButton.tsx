@@ -17,7 +17,7 @@ export default function DeleteButton({
 
   if (isShowModal)
     return (
-      <div className="flex justify-center items-center fixed bg-black/80 top-0 left-0 right-0 bottom-0">
+      <div className="flex justify-center items-center fixed z-50 bg-black/80 top-0 left-0 right-0 bottom-0">
         <div className="bg-white p-4">
           <h3 className="text-center text-lg">Are you sure about deleting?</h3>
           <button

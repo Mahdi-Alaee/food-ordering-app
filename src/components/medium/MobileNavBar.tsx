@@ -14,9 +14,6 @@ export default function MobileNavBar({
   setIsOpenMobileMenu,
 }: MobileNavBarProps) {
   const { data: session } = useSession();
-
-  console.log(window.innerWidth);
-
   const close = () => setIsOpenMobileMenu(false);
 
   return (

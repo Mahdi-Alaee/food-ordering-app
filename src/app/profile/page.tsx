@@ -50,8 +50,6 @@ export default function Profile() {
     e.preventDefault();
     const { newName, phone, street, postalCode, city, country } = formData!;
 
-    console.log({ newName, phone, street, postalCode, city, country });
-
     toast.promise(
       fetch("/api/profile", {
         method: "PUT",

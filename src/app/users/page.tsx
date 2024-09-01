@@ -2,14 +2,11 @@
 
 import UserTabs from "@/components/medium/UserTabs";
 import DeleteButton from "@/components/small/DeleteButton";
-import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
 import { UserData } from "@/types/session";
-import { Category } from "@/types/small-types";
-import { User } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Users() {

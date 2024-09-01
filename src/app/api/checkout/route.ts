@@ -22,48 +22,6 @@ export async function POST(req: Request) {
     cartProducts: cart,
     paid: Boolean(paid),
   });
-
-  // console.log({ res });
-
-  // const line_items =
-  //   // : Stripe.Checkout.SessionCreateParams.LineItem[]
-  //   [];
-
-  // for (const product of cart as Cart[]) {
-  //   line_items.push({
-  //     quantity: +product.count,
-  //     price_data: {
-  //       currency: "USD",
-  //       product_data: {
-  //         name: product.name!,
-  //         images: [product.image!],
-  //         metadata: { productId: product._id! },
-  //       },
-  //       unit_amount: product.price,
-  //     },
-  //   });
-  // }
-  // console.log({ line_items });
-
-  // const stripeSession = await stripe.checkout.sessions.create(
-  //   {
-  //     line_items,
-  //     mode: "payment",
-  //     customer_email: user.email!,
-  //     success_url: process.env.URL + "cart?success=1",
-  //     cancel_url: process.env.URL + "cart?fail=1",
-  //     metadata: { orderId: null },
-  //     shipping_options: [
-  //       {
-  //         shipping_rate_data: {
-  //           display_name: "delivery fee",
-  //           type: "fixed_amount",
-  //           fixed_amount: { amount: 500, currency: "USD" },
-  //         },
-  //       },
-  //     ],
-  //   }
-  //   // {stripeAccount:process.env.STRIPE_SECRET_KEY}
-  // );
+  
   return Response.json(res);
 }

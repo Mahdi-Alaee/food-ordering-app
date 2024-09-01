@@ -36,25 +36,25 @@ export default function CartPage() {
   };
 
   const handleSubmit = async () => {
-    if(!user){
-      router.push('/login')
-      return false
+    if (!user) {
+      router.push("/login");
+      return false;
     }
 
     const { phone, city, country, postalCode, street } = user as UserData;
     if (phone && city && country && postalCode && street) {
-      console.log({
-        cart,
-        address: { phone, city, country, postalCode, street },
-      });
-
       const dialogResult = await withReactContent(Swal).fire({
         title: "Would you like to pay?",
         confirmButtonText: "Yes",
         denyButtonText: "No!",
         showDenyButton: true,
+        showCancelButton: true,
+        cancelButtonText: "cancel",
+        showCloseButton: true,
       });
       console.log(dialogResult);
+
+      if (dialogResult.isDismissed) return false;
 
       const Checkout = new Promise(async (resolve, reject) => {
         const res = await fetch("/api/checkout", {
