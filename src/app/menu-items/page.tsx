@@ -7,27 +7,15 @@ import { MenuItem } from "@/types/small-types";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
 import Loading from "../loading";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
 
 export default function MenuItems() {
   const { isLoading: loadingUser, user } = useProfile();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [loadingMenuItems, setLoadingMenuItems] = useState(true);
+  const { products: menuItems } = useSelector((state: RootState) => state);
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/menu-item");
-      if (res.ok) {
-        const data = await res.json();
-
-        setMenuItems(data);
-        setLoadingMenuItems(false);
-      }
-    })();
-  }, []);
-
-  if (loadingUser || loadingMenuItems) return <Loading />;
+  if (loadingUser) return <Loading />;
   else if (!user?.isAdmin) redirect("/");
   return (
     <main className="mb-16">

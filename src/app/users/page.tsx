@@ -23,7 +23,7 @@ export default function Users() {
     const res = await fetch("/api/user");
     if (res.ok) {
       const users = await res.json();
-      setUsers(users);
+      setUsers(users.reverse());
       setLoadingUsers(false)
     }
   };

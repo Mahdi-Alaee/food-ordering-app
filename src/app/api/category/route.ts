@@ -46,5 +46,7 @@ export async function DELETE(req: Request) {
   mongoose.connect(process.env.MONGO_URL!);
   const res = await CategoryModel.deleteOne({ _id });
 
+  if (res.acknowledged) return Response.json(_id);
+
   return Response.json(res);
 }

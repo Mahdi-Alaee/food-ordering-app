@@ -1,26 +1,18 @@
-'use client'
+"use client";
 
 import withSectionHeader from "@/HOFs/withSectionHeader";
 import FoodBox from "../small/FoodBox";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { MenuItem } from "@/types/small-types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
+import Loading from "@/app/loading";
 
 function CheckOut() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const { products: menuItems } = useSelector((state: RootState) => state);
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/menu-item");
-
-      if (res.ok) {
-        const items = await res.json();
-        
-        setMenuItems(items);
-      }
-    })();
-  }, []);
-
+  console.log({menuItems});
+  
+  if(menuItems?.length < 1) return <Loading />
   return (
     // foods container
     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-16">
@@ -40,9 +32,9 @@ function CheckOut() {
           className="-mt-28 h-56 w-32"
         />
       </div>
-    {menuItems.slice(0,3).map(item => (
-      <FoodBox key={item._id} {...item} />
-    ))}
+      {menuItems.slice(0, 3).map((item) => (
+        <FoodBox key={item._id} {...item} />
+      ))}
     </div>
   );
 }

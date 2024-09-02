@@ -6,6 +6,8 @@ import MenuItemForm from "@/components/medium/MenuItemForm";
 import UserTabs from "@/components/medium/UserTabs";
 import EditableImage from "@/components/small/EditableImage";
 import useProfile from "@/hooks/useProfile";
+import { addProduct, deleteProduct } from "@/Redux/reducers/productsReducer";
+import { RootState, useAppDispatch } from "@/Redux/store";
 import {
   Category,
   MenuItem,
@@ -15,6 +17,7 @@ import {
 import Link from "next/link";
 import { redirect, useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function NewMenuItem() {
@@ -25,29 +28,14 @@ export default function NewMenuItem() {
   const router = useRouter();
   const params = useParams();
   const id = params.id[0];
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const [loadingMenuItems, setLoadingMenuItems] = useState(true);
+  const dispatch = useAppDispatch();
+  const { products, categories } = useSelector((state: RootState) => state);
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/api/menu-item");
-      if (res.ok) {
-        const data = (await res.json()) as MenuItem[];
-        const mainItem = data.find((item) => item._id === id);
-        setMenuItem(mainItem);
-        setImage(mainItem?.image || "");
-        setLoadingMenuItems(false);
-      }
-    })();
-
-    (async () => {
-      const res = await fetch("/api/category");
-      if (res.ok) {
-        const data = await res.json();
-        setCategories(data);
-        setLoadingCategories(false);
-      }
+      const mainItem = products.find((item) => item._id === id);
+      setMenuItem(mainItem);
+      setImage(mainItem?.image || "");
     })();
   }, []);
 
@@ -106,6 +94,9 @@ export default function NewMenuItem() {
       if (res.ok) {
         resolve(res);
         setState("redirecting");
+        const deletedId = await res.json();
+        console.log({ deletedId });
+        dispatch(deleteProduct(deletedId));
         setTimeout(() => {
           router.push("/menu-items");
         }, 2000);
@@ -119,7 +110,7 @@ export default function NewMenuItem() {
     });
   };
 
-  if (loadingUser || loadingCategories || loadingMenuItems) return <Loading />;
+  if (loadingUser) return <Loading />;
   else if (!user?.isAdmin!) redirect("/");
   else if (!menuItem) redirect("/menu-items");
   return (

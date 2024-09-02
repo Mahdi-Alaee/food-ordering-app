@@ -18,7 +18,7 @@ export default function Orders() {
       const res = await fetch("/api/order");
       if (res.ok) {
         const userOrders = await res.json();
-        setOrders(userOrders);
+        setOrders(userOrders.reverse());
         setOrdersLoading(false);
       }
     })();

@@ -5,38 +5,13 @@ import { Category, MenuItem } from "@/types/small-types";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import Loading from "../loading";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Redux/store";
 
 export default function Menu() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const [loadingMenuItems, setLoadingMenuItems] = useState(true);
+  const {products:menuItems,categories} = useSelector((state: RootState) => state)
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/menu-item");
 
-      if (res.ok) {
-        const items = await res.json();
-
-        setMenuItems(items);
-        setLoadingMenuItems(false);
-      }
-    })();
-
-    (async () => {
-      const res = await fetch("/api/category");
-
-      if (res.ok) {
-        const cats = await res.json();
-
-        setCategories(cats);
-        setLoadingCategories(false);
-      }
-    })();
-  }, []);
-
-  if (loadingCategories || loadingMenuItems) return <Loading />;
   return (
     <main className="mb-16 pt-20">
       {categories.map((cat) => (

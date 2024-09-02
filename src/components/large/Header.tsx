@@ -5,22 +5,35 @@ import NavBar from "../medium/NavBar";
 import { SlBasket } from "react-icons/sl";
 import OvalButton from "../small/OvalButton";
 import { signOut, useSession } from "next-auth/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext, AppContextType } from "@/Context/app";
 import MobileNavBar from "../medium/MobileNavBar";
 import { FaBars } from "react-icons/fa";
+import { setProducts } from "@/Redux/reducers/productsReducer";
+import { Category, MenuItem } from "@/types/small-types";
+import { useAppDispatch } from "@/Redux/store";
+import { loadItems } from "@/lib/funcs";
+import { setCategories } from "@/Redux/reducers/categoriesReducer";
 
 export default function Header() {
   const { data: session } = useSession();
   const { cart } = useContext(AppContext) as AppContextType;
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    loadItems("/api/menu-item", dispatch, setProducts);
+    loadItems("/api/category", dispatch, setCategories);
+  }, []);
 
   return (
     <header className="flex justify-between mb-12 md:mb-0">
       {/* left side */}
       <div className="flex items-center gap-8 font-bold">
         {/* logo */}
-        <Link href='/' className="text-redColor text-2xl font-bold">ST PIZZA</Link>
+        <Link href="/" className="text-redColor text-2xl font-bold">
+          ST PIZZA
+        </Link>
 
         <NavBar />
         <MobileNavBar
@@ -76,7 +89,11 @@ export default function Header() {
           </span>
         </Link>
         {/* menu button */}
-        <button className="md:hidden" onClick={() => setIsOpenMobileMenu(true)} type="button">
+        <button
+          className="md:hidden"
+          onClick={() => setIsOpenMobileMenu(true)}
+          type="button"
+        >
           <FaBars className="text-2xl" />
         </button>
       </div>

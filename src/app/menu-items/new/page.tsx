@@ -1,34 +1,25 @@
 "use client";
 import Loading from "@/app/loading";
 import Left from "@/components/icons/Left";
-import Plus from "@/components/icons/Plus";
-import Right from "@/components/icons/Right";
-import TargetDown from "@/components/icons/TargetDown";
-import Trash from "@/components/icons/Trash";
 import MenuItemForm from "@/components/medium/MenuItemForm";
 import UserTabs from "@/components/medium/UserTabs";
 import EditableImage from "@/components/small/EditableImage";
-import ImageUploader from "@/components/small/ImageUploader";
-import TextBox from "@/components/small/TextBox";
 import useProfile from "@/hooks/useProfile";
-import {
-  Category,
-  MenuItem,
-  MenuItemSizeOrExtra,
-  State,
-} from "@/types/small-types";
-import Image from "next/image";
+import { addProduct } from "@/Redux/reducers/productsReducer";
+import { RootState, useAppDispatch } from "@/Redux/store";
+import { MenuItem, State } from "@/types/small-types";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function NewMenuItem() {
   const { isLoading: loadingUser, user } = useProfile();
   const [state, setState] = useState<State>("");
   const [image, setImage] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  const dispatch = useAppDispatch();
+  const { categories } = useSelector((state: RootState) => state);
 
   const router = useRouter();
 
@@ -47,15 +38,6 @@ export default function NewMenuItem() {
     }
   }, [state]);
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/category");
-      const data = await res.json();
-      setCategories(data);
-      setLoadingCategories(false)
-    })();
-  }, []);
-
   const onCreateMenuItem = async (data: MenuItem) => {
     const body = { ...data, image };
 
@@ -71,6 +53,9 @@ export default function NewMenuItem() {
       if (res.ok) {
         resolve(res);
         setState("redirecting");
+        const newMenuItem = await res.json();
+        console.log({ newMenuItem });
+        dispatch(addProduct(newMenuItem));
         setTimeout(() => {
           router.push("/menu-items");
         }, 2000);
@@ -84,7 +69,7 @@ export default function NewMenuItem() {
     });
   };
 
-  if (loadingUser || loadingCategories) return <Loading />;
+  if (loadingUser) return <Loading />;
   else if (!user?.isAdmin!) redirect("/");
   return (
     <main className="mb-16">

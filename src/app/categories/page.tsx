@@ -9,13 +9,21 @@ import { redirect } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Loading from "../loading";
+import { RootState, useAppDispatch } from "@/Redux/store";
+import { loadItems } from "@/lib/funcs";
+import { useSelector } from "react-redux";
+import {
+  addCategory,
+  deleteCategory,
+  setCategories,
+} from "@/Redux/reducers/categoriesReducer";
 
 export default function Categories() {
   const { isLoading: loadingUser, user } = useProfile();
   const [name, setName] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | {}>({});
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  const dispatch = useAppDispatch();
+  const { categories } = useSelector((state: RootState) => state);
 
   const formSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +41,7 @@ export default function Categories() {
       });
 
       if (res.ok) {
-        getCategories();
+        loadItems("/api/category", dispatch, setCategories);
         setName("");
         setSelectedCategory({});
         resolve(res);
@@ -53,7 +61,10 @@ export default function Categories() {
 
       if (res.ok) {
         setName("");
-        getCategories();
+        const newCategory = await res.json();
+        console.log({ newCategory });
+
+        dispatch(addCategory(newCategory));
         resolve(res);
       } else reject();
     });
@@ -73,42 +84,30 @@ export default function Categories() {
     }
   };
 
-  const getCategories = async () => {
-    const res = await fetch("/api/category");
-    if (res.ok) {
-      const categories = await res.json();
-      setCategories(categories);
-      setLoadingCategories(false);
-    }
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, []);
-
   useEffect(() => {
     if ("name" in selectedCategory) setName(selectedCategory.name);
   }, [selectedCategory]);
 
   const onDeleteCategory = (id: string) => {
-    const deleteCategory = new Promise(async (resolve, reject) => {
+    const DeleteCategory = new Promise(async (resolve, reject) => {
       const res = await fetch("/api/category?_id=" + id, {
         method: "DELETE",
       });
       if (res.ok) {
         resolve(res);
-        getCategories();
+        const deletedId = await res.json();
+        dispatch(deleteCategory(deletedId));
       } else reject();
     });
 
-    toast.promise(deleteCategory, {
+    toast.promise(DeleteCategory, {
       pending: "Loading ...",
       success: "Category is deleted successfully",
       error: "An error has occured!",
     });
   };
 
-  if (loadingUser || loadingCategories) {
+  if (loadingUser) {
     return <Loading />;
   } else if (user === null) {
     redirect("/profile");
@@ -157,40 +156,41 @@ export default function Categories() {
         {/* categories */}
         <div>
           {/* title */}
-          {categories.length < 1 ? (
-            <span className="text-red-500">No items are avalible!</span>
-          ) : (
+          {categories?.length > 0 ? (
             <>
               <span className="text-sm">Edit category:</span>
               {/* items */}
               <ul className="flex flex-col gap-y-1">
-                {categories.map((cat) => (
-                  <li
-                    key={cat._id}
-                    className="flex justify-between items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
-                  >
-                    <span>{cat.name}</span>
+                {categories?.length > 0 &&
+                  categories.map((cat) => (
+                    <li
+                      key={cat._id}
+                      className="flex justify-between items-center bg-gray-200 px-4 py-2 text-black font-bold rounded-xl cursor-pointer"
+                    >
+                      <span>{cat.name}</span>
 
-                    {/* buttons */}
-                    <div className="flex gap-x-2">
-                      <button
-                        onClick={() => setSelectedCategory(cat)}
-                        className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-gray-100"
-                        type="button"
-                      >
-                        Edit
-                      </button>
-                      <DeleteButton
-                        className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-red-500 hover:text-white"
-                        onDelete={() => onDeleteCategory(cat._id)}
-                      >
-                        Delete
-                      </DeleteButton>
-                    </div>
-                  </li>
-                ))}
+                      {/* buttons */}
+                      <div className="flex gap-x-2">
+                        <button
+                          onClick={() => setSelectedCategory(cat)}
+                          className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-gray-100"
+                          type="button"
+                        >
+                          Edit
+                        </button>
+                        <DeleteButton
+                          className="py-2 px-6 rounded-lg border border-gray-300 hover:bg-red-500 hover:text-white"
+                          onDelete={() => onDeleteCategory(cat._id)}
+                        >
+                          Delete
+                        </DeleteButton>
+                      </div>
+                    </li>
+                  ))}
               </ul>
             </>
+          ) : (
+            <span className="text-red-500">No items are avalible!</span>
           )}
         </div>
       </div>

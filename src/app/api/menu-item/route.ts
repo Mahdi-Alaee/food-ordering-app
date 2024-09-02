@@ -38,6 +38,6 @@ export async function DELETE(req: Request) {
   const _id = url.searchParams.get("_id");
   mongoose.connect(process.env.MONGO_URL!);
   const res = await MenuItemModel.deleteOne({ _id });
-
+  if (res.acknowledged) return Response.json(_id);
   return Response.json(res);
 }

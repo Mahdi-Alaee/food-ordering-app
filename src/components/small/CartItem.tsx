@@ -44,7 +44,7 @@ export default function CartItem({
 
           {/* size */}
           <p className="text-black">
-            <span>Size: </span> {size?.name}
+            <span>Size: </span> {size?.name || 'normal'}
           </p>
           {/* extras */}
           {extras?.map((extra) => (
