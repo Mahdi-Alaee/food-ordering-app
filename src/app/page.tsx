@@ -1,12 +1,10 @@
-'use client'
-
 import AboutUs from "@/components/large/AboutUs";
 import CheckOut from "@/components/large/CheckOut";
 import ContactUs from "@/components/large/ContactUs";
 import Hero from "@/components/large/Hero";
 import { ToastContainer } from "react-toastify";
 
-export default async function Home() {
+export default function Home() {
   return (
     <main className="relative">
       <Hero />

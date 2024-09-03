@@ -27,7 +27,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="flex justify-between mb-12 md:mb-0">
+    <header className="sticky top-0 z-10 bg-white py-4 flex justify-between mb-12 md:-mb-4">
       {/* left side */}
       <div className="flex items-center gap-8 font-bold">
         {/* logo */}
