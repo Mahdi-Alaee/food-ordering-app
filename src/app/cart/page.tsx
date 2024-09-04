@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import { Cart } from "@/types/small-types";
 
 export default function CartPage() {
-  const { cart } = useContext(AppContext) as AppContextType;
+  const { cart, resetCart } = useContext(AppContext) as AppContextType;
   const [subTotal, setSubTotal] = useState<number>();
   const [deliveryFee, setDeliveryFee] = useState<number>(5);
   const [total, setTotal] = useState<number>();
@@ -41,6 +41,11 @@ export default function CartPage() {
       return false;
     }
 
+    if(cart.length < 1){
+      toast.info('Your basket is empty!')
+      return false
+    }
+
     const { phone, city, country, postalCode, street } = user as UserData;
     if (phone && city && country && postalCode && street) {
       const dialogResult = await withReactContent(Swal).fire({
@@ -52,7 +57,6 @@ export default function CartPage() {
         cancelButtonText: "cancel",
         showCloseButton: true,
       });
-      console.log(dialogResult);
 
       if (dialogResult.isDismissed) return false;
 
@@ -72,6 +76,7 @@ export default function CartPage() {
           resolve(res);
           const data = (await res.json()) as Cart;
           setTimeout(() => {
+            resetCart();
             router.push("/orders/" + data._id);
           }, 2000);
         } else {

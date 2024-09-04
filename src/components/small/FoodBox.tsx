@@ -6,14 +6,11 @@ import { Cart, MenuItem } from "@/types/small-types";
 import { AppContext, AppContextType } from "@/Context/app";
 import { useContext, useState } from "react";
 import AddToCartModal from "../medium/AddToCartModal";
-import { PropagateLoader } from "react-spinners";
-import Loading from "@/app/loading";
 
 export default function FoodBox(props: MenuItem) {
-  const { addToCart, cart } = useContext(AppContext) as AppContextType;
+  const { addToCart } = useContext(AppContext) as AppContextType;
   let mainItem: Cart;
-  const { _id, name, description, price, image, sizes, extras, category } =
-    props;
+  const { name, description, price, image, sizes, extras, category } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const hasSizeOrExtra = sizes!.length > 0 || extras!.length > 0;
@@ -33,7 +30,9 @@ export default function FoodBox(props: MenuItem) {
         <h4 className="text-black font-bold text-xl">{name}</h4>
 
         {/* description */}
-        <p className="text-sm text-center font-bold">{description}</p>
+        <p className="text-sm text-center font-bold">
+          {description}
+        </p>
 
         {/* cart button */}
         <OvalButton

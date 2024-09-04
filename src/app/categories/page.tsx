@@ -62,7 +62,6 @@ export default function Categories() {
       if (res.ok) {
         setName("");
         const newCategory = await res.json();
-        console.log({ newCategory });
 
         dispatch(addCategory(newCategory));
         resolve(res);

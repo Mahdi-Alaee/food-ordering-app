@@ -54,7 +54,6 @@ export default function NewMenuItem() {
         resolve(res);
         setState("redirecting");
         const newMenuItem = await res.json();
-        console.log({ newMenuItem });
         dispatch(addProduct(newMenuItem));
         setTimeout(() => {
           router.push("/menu-items");

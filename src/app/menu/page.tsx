@@ -9,8 +9,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/Redux/store";
 
 export default function Menu() {
-  const {products:menuItems,categories} = useSelector((state: RootState) => state)
-
+  const { products: menuItems, categories } = useSelector(
+    (state: RootState) => state
+  );
 
   return (
     <main className="mb-16 pt-20">
@@ -20,10 +21,19 @@ export default function Menu() {
             {cat.name}
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-16">
-            {menuItems.map((item) => {
-              if (item.category === cat._id)
-                return <FoodBox key={item._id} {...item} />;
-            })}
+            {menuItems.findIndex((item) => item.category === cat._id) !== -1 ? (
+              menuItems.map((item) => {
+                if (item.category === cat._id)
+                  return <FoodBox key={item._id} {...item} />;
+              })
+            ) : (
+              <>
+              <span></span>
+              <p className="text-red-500 text-center text-2xl mt-12 w-full">
+                No items are avalible!
+              </p>
+              </>
+            )}
           </div>
         </div>
       ))}

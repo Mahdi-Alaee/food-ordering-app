@@ -95,7 +95,6 @@ export default function NewMenuItem() {
         resolve(res);
         setState("redirecting");
         const deletedId = await res.json();
-        console.log({ deletedId });
         dispatch(deleteProduct(deletedId));
         setTimeout(() => {
           router.push("/menu-items");

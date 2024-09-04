@@ -8,6 +8,7 @@ export interface AppContextType {
   cart: Cart[];
   addToCart: (newItem: Cart) => void;
   removeFromCart: (itemId: string) => void;
+  resetCart: Function;
 }
 
 export const AppContext = createContext({});
@@ -67,13 +68,16 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         return newCart;
       }
     });
-    toast.info(
-      `${isHeigherThanOne ? "Decreased" : "Removed"} :)`
-    );
+    toast.info(`${isHeigherThanOne ? "Decreased" : "Removed"} :)`);
+  };
+
+  const resetCart = () => {
+    setCart([]);
+    setCartToLocalStorage([]);
   };
 
   return (
-    <AppContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <AppContext.Provider value={{ cart, addToCart, removeFromCart, resetCart }}>
       {children}
     </AppContext.Provider>
   );

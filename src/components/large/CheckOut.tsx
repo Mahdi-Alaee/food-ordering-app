@@ -9,10 +9,8 @@ import Loading from "@/app/loading";
 
 function CheckOut() {
   const { products: menuItems } = useSelector((state: RootState) => state);
-
-  console.log({menuItems});
   
-  if(menuItems?.length < 1) return <Loading />
+  if (menuItems?.length < 1) return <Loading />;
   return (
     // foods container
     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-16">
@@ -32,9 +30,10 @@ function CheckOut() {
           className="-mt-28 h-56 w-32"
         />
       </div>
-      {menuItems.slice(0, 3).map((item) => (
-        <FoodBox key={item._id} {...item} />
-      ))}
+      {menuItems?.length > 0 &&
+        menuItems
+          .slice(0, 3)
+          .map((item) => <FoodBox key={item._id} {...item} />)}
     </div>
   );
 }

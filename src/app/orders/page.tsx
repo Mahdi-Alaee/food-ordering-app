@@ -12,7 +12,6 @@ export default function Orders() {
   const [orders, setOrders] = useState<OrderType[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
 
-
   useEffect(() => {
     (async () => {
       const res = await fetch("/api/order");
@@ -38,7 +37,9 @@ export default function Orders() {
             <span className="text-red-500">No items are avalible!</span>
           ) : (
             <>
-              <span className="block text-center text-sm mb-2 sm:text-left">Edit category:</span>
+              <span className="block text-center text-sm mb-2 sm:text-left">
+                Edit category:
+              </span>
               {/* items */}
               <ul className="flex flex-col gap-y-1">
                 {orders.map((order) => (
@@ -82,7 +83,7 @@ export default function Orders() {
                     </div>
                     {/* show link */}
                     <Link
-                      className="px-6 py-2 sm:p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                      className="text-nowrap px-6 py-2 sm:p-2 rounded-lg border border-gray-300 hover:bg-gray-100"
                       href={`/orders/${order._id}`}
                     >
                       Show order

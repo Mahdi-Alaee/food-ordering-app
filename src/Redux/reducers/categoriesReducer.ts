@@ -11,15 +11,12 @@ const categoriesSlice = createSlice({
       return action.payload.reverse();
     },
     addCategory: (state, action: PayloadAction<Category>) => {
-      console.log({ state, action });
       return [action.payload, ...state];
     },
     deleteCategory: (state, action: PayloadAction<string>) => {
-      console.log({ state, action });
       const newCategorys = state.filter(
         (category) => category._id !== action.payload
       );
-      console.log({ newCategorys });
 
       return newCategorys;
     },

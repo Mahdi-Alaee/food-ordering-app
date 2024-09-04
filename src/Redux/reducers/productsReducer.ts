@@ -11,15 +11,12 @@ export const counterSlice = createSlice({
       return action.payload;
     },
     addProduct: (state, action: PayloadAction<MenuItem>) => {
-      console.log({ state, action });
       return [...state, action.payload];
     },
     deleteProduct: (state, action: PayloadAction<string>) => {
-      console.log({ state, action });
       const newProducts = state.filter(
         (product) => product._id !== action.payload
       );
-      console.log({ newProducts });
 
       return newProducts;
     },
