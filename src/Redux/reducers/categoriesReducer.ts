@@ -8,7 +8,7 @@ const categoriesSlice = createSlice({
   initialState,
   reducers: {
     setCategories: (_state, action: PayloadAction<Category[]>) => {
-      return action.payload.reverse();
+      return action?.payload?.reverse();
     },
     addCategory: (state, action: PayloadAction<Category>) => {
       return [action.payload, ...state];

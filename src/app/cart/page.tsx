@@ -36,14 +36,16 @@ export default function CartPage() {
   };
 
   const handleSubmit = async () => {
-    if (!user) {
-      router.push("/login");
+    console.log({ user, cart });
+
+    if (cart.length < 1) {
+      toast.info("Your basket is empty!");
       return false;
     }
 
-    if(cart.length < 1){
-      toast.info('Your basket is empty!')
-      return false
+    if (!Boolean(user)) {
+      router.push("/login");
+      return false;
     }
 
     const { phone, city, country, postalCode, street } = user as UserData;

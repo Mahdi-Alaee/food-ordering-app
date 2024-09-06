@@ -41,7 +41,7 @@ export async function GET() {
   const session = await getServerSession(options);
 
   if (!session?.user) {
-    throw new Error("please signin first!");
+    return Response.json(null);
   }
   const user = await UserModel.findOne({ email: session.user.email });
 
