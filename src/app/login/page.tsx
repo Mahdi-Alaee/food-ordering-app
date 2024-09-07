@@ -44,41 +44,13 @@ export default function Login() {
       <h1 className="text-redColor text-4xl mt-8 text-center">Login</h1>
       {/* Login form */}
       <form className="max-w-80 mx-auto mt-4 mb-16" onSubmit={onLogin}>
-        {/* Login container */}
-        <div className="flex flex-col gap-y-2">
-          {/* email */}
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-xl"
-            type="email"
-            placeholder="email"
-          />
-          {/* password */}
-          <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-xl"
-            type="password"
-            placeholder="password"
-          />
-          {/* submit button */}
-          <button
-            className="bg-redColor text-white border font-bold rounded-xl py-2 disabled:bg-red-400 disabled:cursor-not-allowed"
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading ..." : "Login"}
-          </button>
-          {/* error */}
-          <p className="text-center text-red-400">{error}</p>
-        </div>
+      
         {/* alternative text */}
-        <p className="py-4 text-center">or login with providers</p>
+        <p className="py-4 text-center">login with providers</p>
         {/* buttons container */}
         <div className="w-full flex flex-col gap-y-2">
           {/* google button */}
-          <button
+          {/* <button
             onClick={() => signIn("google", { callbackUrl: "/" })}
             type="button"
             className="border py-2 text-black font-bold rounded-xl flex items-center justify-center gap-x-4"
@@ -90,7 +62,7 @@ export default function Login() {
               height="24"
             />
             Login with google
-          </button>
+          </button> */}
           {/* github button */}
           <button
             className="border py-2 text-black font-bold rounded-xl flex items-center justify-center gap-x-4"
@@ -125,3 +97,33 @@ export default function Login() {
     </main>
   );
 }
+
+//   {/* Login container */}
+//   <div className="flex flex-col gap-y-2">
+//   {/* email */}
+//   <input
+//     value={email}
+//     onChange={(e) => setEmail(e.target.value)}
+//     className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-xl"
+//     type="email"
+//     placeholder="email"
+//   />
+//   {/* password */}
+//   <input
+//     value={password}
+//     onChange={(e) => setPassword(e.target.value)}
+//     className="border outline-none border-gray-300 bg-gray-100 p-2 rounded-xl"
+//     type="password"
+//     placeholder="password"
+//   />
+//   {/* submit button */}
+//   <button
+//     className="bg-redColor text-white border font-bold rounded-xl py-2 disabled:bg-red-400 disabled:cursor-not-allowed"
+//     type="submit"
+//     disabled={isLoading}
+//   >
+//     {isLoading ? "Loading ..." : "Login"}
+//   </button>
+//   {/* error */}
+//   <p className="text-center text-red-400">{error}</p>
+// </div>
