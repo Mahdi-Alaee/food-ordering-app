@@ -12,13 +12,15 @@ import { UserData } from "@/types/session";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import { Cart } from "@/types/small-types";
+import { useSession } from "next-auth/react";
 
 export default function CartPage() {
   const { cart, resetCart } = useContext(AppContext) as AppContextType;
   const [subTotal, setSubTotal] = useState<number>();
   const [deliveryFee, setDeliveryFee] = useState<number>(5);
   const [total, setTotal] = useState<number>();
-  const { user } = useProfile();
+  const { user,isLoading } = useProfile();
+  const {data:session} = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,14 +38,12 @@ export default function CartPage() {
   };
 
   const handleSubmit = async () => {
-    console.log({ user, cart });
-
     if (cart.length < 1) {
       toast.info("Your basket is empty!");
       return false;
     }
 
-    if (!Boolean(user)) {
+    if (!Boolean(session)) {
       router.push("/login");
       return false;
     }
@@ -114,6 +114,7 @@ export default function CartPage() {
           onClick={handleSubmit}
           type="button"
           className="bg-redColor mx-auto mt-12 scale-150"
+          disabled={isLoading}
         >
           Submit
         </OvalButton>
